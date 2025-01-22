@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 
-Route::get('/', [MenuController::class, 'index'])->name('menu.index');
-Route::get('/person/{name}/{section}', [MenuController::class, 'section'])->name('menu.section');
+Route::get('/', function () {
+    $people = ['Alex', 'Mariana', 'Froy', 'Hugo',];
+    return view('index', compact('people'));
+});
 
+Route::get('/menu/{person}/{section}', function ($person, $section) {
+    return view('section', compact('person', 'section'));
+})->name('menu.section');
