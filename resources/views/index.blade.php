@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Sitio</title>
+    <title>Desarrollo web</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
@@ -70,9 +70,9 @@
                                         </a>
                                         <div class="collapse" id="materias-{{ $loop->index }}">
                                             <ul class="list-unstyled ms-3">
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Materias', 'Base de Datos')"><i class="bi bi-file-earmark-text"></i> Base de Datos</a></li>
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Materias', 'Aplicación Móvil')"><i class="bi bi-file-earmark-text"></i> Aplicación Móvil</a></li>
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Materias', 'Desarrollo Web')"><i class="bi bi-file-earmark-text"></i> Desarrollo Web</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Materias', 'Base de Datos'); updateSectionContent('Materias', 'Base de Datos')"><i class="bi bi-file-earmark-text"></i> Base de Datos</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Materias', 'Aplicación Móvil'); updateSectionContent('Materias', 'Aplicación Móvil')"><i class="bi bi-file-earmark-text"></i> Aplicación Móvil</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Materias', 'Desarrollo Web'); updateSectionContent('Materias', 'Desarrollo Web')"><i class="bi bi-file-earmark-text"></i> Desarrollo Web</a></li>
                                             </ul>
                                         </div>
                                     </li>
@@ -83,9 +83,9 @@
                                         </a>
                                         <div class="collapse" id="juegos-{{ $loop->index }}">
                                             <ul class="list-unstyled ms-3">
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Juegos', 'Ajedrez')"><i class="bi bi-controller"></i> Ajedrez</a></li>
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Juegos', 'Futbol')"><i class="bi bi-controller"></i> Futbol</a></li>
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Juegos', 'Cubo de rubik')"><i class="bi bi-controller"></i> Cubo de rubik</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Juegos', 'Ajedrez'); updateSectionContent('Juegos', 'Ajedrez')"><i class="bi bi-controller"></i> Ajedrez</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Juegos', 'Futbol'); updateSectionContent('Juegos', 'Futbol')"><i class="bi bi-controller"></i> Futbol</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Juegos', 'Cubo de rubik'); updateSectionContent('Juegos', 'Cubo de rubik')"><i class="bi bi-controller"></i> Cubo de Rubik</a></li>
                                             </ul>
                                         </div>
                                     </li>
@@ -96,9 +96,9 @@
                                         </a>
                                         <div class="collapse" id="proyectos-{{ $loop->index }}">
                                             <ul class="list-unstyled ms-3">
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Proyectos', 'Taxis locales')"><i class="bi bi-briefcase"></i> Taxis locales</a></li>
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Proyectos', 'Psicologia')"><i class="bi bi-briefcase"></i> Psicologia</a></li>
-                                                <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Proyectos', 'Escolar')"><i class="bi bi-briefcase"></i> Escolar</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Proyectos', 'Taxis locales'); updateSectionContent('Proyectos', 'Taxis locales')"><i class="bi bi-briefcase"></i> Taxis locales</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Proyectos', 'Psicologia'); updateSectionContent('Proyectos', 'Psicologia')"><i class="bi bi-briefcase"></i> Psicologia</a></li>
+                                            <li><a class="nav-link" href="#" onclick="updateBreadcrumb('Inicio', '{{ $person }}', 'Proyectos', 'Escolar'); updateSectionContent('Proyectos', 'Escolar')"><i class="bi bi-briefcase"></i> Escolar</a></li>
                                             </ul>
                                         </div>
                                     </li>
@@ -119,10 +119,92 @@
                 </nav>
                 
                 <!-- Section Content -->
+                <div id="section-content">
+        <h3>Selecciona una opción para ver más detalles.</h3>
+    </div>
                 @yield('content')
             </main>
         </div>
     </div>
+
+    <script>
+    function updateBreadcrumb(...path) {
+    // Actualizar el breadcrumb
+    const breadcrumbContainer = document.getElementById('breadcrumb-container');
+    breadcrumbContainer.innerHTML = '';  // Limpiar los breadcrumbs existentes
+
+    path.forEach((part, index) => {
+        const breadcrumbItem = document.createElement('li');
+        breadcrumbItem.classList.add('breadcrumb-item');
+
+        if (index === path.length - 1) {
+            // Si es el último breadcrumb, no es clickeable
+            breadcrumbItem.classList.add('active');
+            breadcrumbItem.textContent = part;
+        } else {
+            const breadcrumbLink = document.createElement('a');
+            breadcrumbLink.href = '#';
+            breadcrumbLink.textContent = part;
+            breadcrumbLink.onclick = () => updateBreadcrumb(...path.slice(0, index + 1));
+            breadcrumbItem.appendChild(breadcrumbLink);
+        }
+
+        breadcrumbContainer.appendChild(breadcrumbItem);
+    });
+}
+
+
+    // Función para actualizar el contenido de la sección principal
+    function updateSectionContent(category, topic) {
+        const sectionContent = document.getElementById('section-content');
+        
+        let description = '';
+        let imageUrl = '';
+
+        // Definir la descripción y la imagen según la categoría y el tema
+        if (category === 'Materias') {
+            if (topic === 'Base de Datos') {
+                description = 'Descripción sobre la materia de Base de Datos.';
+                imageUrl = 'ruta_a_imagen_base_de_datos.jpg';  // Aquí debes colocar la ruta de la imagen
+            } else if (topic === 'Aplicación Móvil') {
+                description = 'Descripción sobre la materia de Aplicación Móvil.';
+                imageUrl = 'ruta_a_imagen_aplicacion_movil.jpg';  // Aquí debes colocar la ruta de la imagen
+            } else if (topic === 'Desarrollo Web') {
+                description = 'Descripción sobre la materia de Desarrollo Web.';
+                imageUrl = 'ruta_a_imagen_desarrollo_web.jpg';  // Aquí debes colocar la ruta de la imagen
+            }
+        } else if (category === 'Juegos') {
+            if (topic === 'Ajedrez') {
+                description = 'Descripción sobre el juego de Ajedrez.';
+                imageUrl = 'ruta_a_imagen_ajedrez.jpg';
+            } else if (topic === 'Futbol') {
+                description = 'Descripción sobre el juego de Futbol.';
+                imageUrl = 'ruta_a_imagen_futbol.jpg';
+            } else if (topic === 'Cubo de rubik') {
+                description = 'Descripción sobre el juego Cubo de Rubik.';
+                imageUrl = 'ruta_a_imagen_cubo_rubik.jpg';
+            }
+        } else if (category === 'Proyectos') {
+            if (topic === 'Taxis locales') {
+                description = 'Descripción sobre el proyecto de Taxis locales.';
+                imageUrl = 'ruta_a_imagen_taxis_locales.jpg';
+            } else if (topic === 'Psicologia') {
+                description = 'Descripción sobre el proyecto de Psicología.';
+                imageUrl = 'ruta_a_imagen_psicologia.jpg';
+            } else if (topic === 'Escolar') {
+                description = 'Descripción sobre el proyecto Escolar.';
+                imageUrl = 'ruta_a_imagen_escolar.jpg';
+            }
+        }
+
+        // Mostrar la descripción y la imagen en el contenido
+        sectionContent.innerHTML = `
+            <h3>${topic}</h3>
+            <p>${description}</p>
+            <img src="${imageUrl}" alt="${topic}" class="img-fluid">
+        `;
+    }
+</script>
 
     <!-- Footer -->
     <footer>
