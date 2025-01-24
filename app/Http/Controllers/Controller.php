@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controller as BaseController; // Importar el controlador base de Laravel
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    // Métodos comunes para tus controladores
+    use AuthorizesRequests, ValidatesRequests;
 }
