@@ -16,7 +16,7 @@
         }
 
         .sidebar {
-            background-color: #f8f9fa;
+            background-color:rgb(251, 251, 251);
             color: black;
             padding-top: 10px;
         }
@@ -26,7 +26,7 @@
         }
 
         .sidebar .nav-link:hover {
-            background-color: #495057;
+            background-color:rgb(67, 81, 95);
             border-radius: 5px;
         }
 

@@ -17,7 +17,6 @@ Auth::routes();
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
-
     Route::get('/home', function () {
         $people = ['Alex', 'Mariana', 'Froy', 'Hugo',];
         return view('index', compact('people'));
@@ -29,3 +28,7 @@ Route::post('/logout', function () {
 });
 
 
+
+// Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
