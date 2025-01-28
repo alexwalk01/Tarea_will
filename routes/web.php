@@ -27,6 +27,10 @@ Route::post('/logout', function () {
     return response()->json(['message' => 'Logout successful']);
 });
 
+//Ruta para generar un error 500 (error de servidor)
+Route::get('/test_error', function () {
+    abort(500); // Provocar error 500
+});
 
 
 // Auth::routes();
