@@ -17,8 +17,16 @@ class MenuController extends Controller
     {
         // Verifica que la sección solicitada sea válida
         $sections = ['juegos', 'proyectos', 'materias'];
+
+        // Si la sección no existe, lanza un error 404
         if (!in_array($section, $sections)) {
-            abort(404);  // Llama a la página 404 si la sección no existe
+            abort(404); // Error 404: Página no encontrada
+        }
+
+        // Ejemplo: lógica para restringir acceso a ciertas personas o secciones
+        $restrictedSections = ['proyectos']; // Secciones restringidas
+        if (in_array($section, $restrictedSections) && $name !== 'Admin') {
+            abort(403); // Error 403: Acceso prohibido
         }
 
         return view('menu.section', compact('name', 'section'));

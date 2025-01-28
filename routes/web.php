@@ -4,35 +4,25 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MenuController;
 use Illuminate\Support\Facades\Auth;
 
-
-
-Route::get('/menu/{person}/{section}', function ($person, $section) {
-    return view('section', compact('person', 'section'));
-})->name('menu.section');
+// Ruta para el índice
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
-Route::get('/person/{name}/{section}', [MenuController::class, 'section'])->name('menu.section');
 
+// Ruta para acceder a una sección de una persona (ej. /menu/Alex/juegos)
+Route::get('/menu/{name}/{section}', [MenuController::class, 'section'])->name('menu.section');
+
+// Rutas de autenticación
 Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+// Ruta de inicio después de iniciar sesión
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', function () {
-        $people = ['Alex', 'Mariana', 'Froy', 'Hugo',];
+        $people = ['Alex', 'Mariana', 'Froy', 'Hugo'];
         return view('index', compact('people'));
     });
 });
+
+// Ruta de cierre de sesión
 Route::post('/logout', function () {
     Auth::logout();
     return response()->json(['message' => 'Logout successful']);
 });
-
-//Ruta para generar un error 500 (error de servidor)
-Route::get('/test_error', function () {
-    abort(500); // Provocar error 500
-});
-
-
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
