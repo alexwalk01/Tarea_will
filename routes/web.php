@@ -26,3 +26,8 @@ Route::post('/logout', function () {
     Auth::logout();
     return response()->json(['message' => 'Logout successful']);
 });
+
+
+Route::get('/test_error', function () {
+    abort(500);
+});
