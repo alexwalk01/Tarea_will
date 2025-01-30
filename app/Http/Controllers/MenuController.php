@@ -9,9 +9,15 @@ use App\Models\Materia;
 use App\Models\Proyecto;
 
 class MenuController extends Controller {
-    public function index() {
+    public function index()
+    {
         $user = Auth::user();
-        return view('index', compact('user'));
+
+        return view('index', [
+            'juegos' => $user->juegos,
+            'materias' => $user->materias,
+            'proyectos' => $user->proyectos
+        ]);
     }
 
     public function section($name, $section) {

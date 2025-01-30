@@ -9,9 +9,11 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    public function juegos() {
+    public function juegos()
+    {
         return $this->hasMany(Juego::class);
     }
+
 
     public function materias() {
         return $this->hasMany(Materia::class);
