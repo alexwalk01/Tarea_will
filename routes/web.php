@@ -15,8 +15,6 @@ Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 Route::get('/menu/{name}/{section}', [MenuController::class, 'section'])->name('menu.section');
 
 
-
-
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
 Route::middleware(['auth'])->group(function () {
