@@ -1,15 +1,15 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Juego extends Model {
+class Juego extends Model
+{
     use HasFactory;
 
-    protected $fillable = ['nombre', 'descripcion', 'user_id'];
+    protected $table = 'juegos'; // Asegúrate de que el nombre coincida con tu tabla en la base de datos
 
-    public function user() {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['nombre', 'descripcion', 'categoria_id'];
 }
