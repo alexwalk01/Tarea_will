@@ -133,7 +133,7 @@
                 </nav>
 
                 <div>
-                    <h2>Bienvenido</h2>
+                    <h2>Bienvenido Admin</h2>
                     <p>Selecciona una opción del menú para explorar el contenido.</p>
                 </div>
             </main>
