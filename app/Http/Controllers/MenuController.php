@@ -3,30 +3,33 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Juego;
+use App\Models\Materia;
+use App\Models\Proyecto;
 
-class MenuController extends Controller
-{
-    public function index()
-    {
-        // Lista de personas
-        $people = ['Alex', 'Mariana', 'Froy', 'Hugo'];
-        return view('menu.index', compact('people'));
+class MenuController extends Controller {
+    public function index() {
+        $user = Auth::user();
+        return view('index', compact('user'));
     }
 
-    public function section($name, $section)
-    {
-        // Verifica que la sección solicitada sea válida
-        $sections = ['juegos', 'proyectos', 'materias'];
-        if (!in_array($section, $sections)) {
-            abort(404);  // Llama a la página 404 si la sección no existe
+    public function section($name, $section) {
+        if (Auth::user()->name !== ucfirst($name)) {
+            abort(403);
         }
 
-        return view('menu.section', compact('name', 'section'));
-    }
+        $validSections = ['juegos', 'materias', 'proyectos'];
+        if (!in_array($section, $validSections)) {
+            abort(404);
+        }
 
-    public function show($person, $category, $subcategory)
-    {
-        // Lógica para obtener los datos basados en la persona, categoría y subcategoría
-        return view('menu.show', compact('person', 'category', 'subcategory'));
+        $data = match ($section) {
+            'juegos' => Auth::user()->juegos,
+            'materias' => Auth::user()->materias,
+            'proyectos' => Auth::user()->proyectos,
+        };
+
+        return view("{$name}.{$section}.principal", compact('name', 'section', 'data'));
     }
 }
