@@ -3,42 +3,6 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar de navegación -->
-        <nav class="col-12 col-md-3 col-lg-2 sidebar" id="sidebar">
-            <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-                <i class="bi bi-list"></i> Menú
-            </button>
-            <div class="collapse d-md-block" id="sidebarMenu">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('menu.index') }}">
-                            <i class="bi bi-house-door"></i> Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('juegos.index']) }}">
-                            <i class="bi bi-controller"></i> Juegos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('materia.index]) }}">
-                            <i class="bi bi-book"></i> Materias
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('proyectos.index' }}">
-                            <i class="bi bi-lightbulb"></i> Proyectos
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="#" onclick="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
         <!-- Contenido principal -->
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">

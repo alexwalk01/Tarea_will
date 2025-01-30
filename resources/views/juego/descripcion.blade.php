@@ -11,3 +11,4 @@
     <a href="{{ route('menu.index') }}">Volver al menú</a>
 </body>
 </html>
+

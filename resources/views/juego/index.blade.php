@@ -8,6 +8,7 @@
 <body>
     <h1>Menú</h1>
 
+
     <h2>Juegos</h2>
     @if (isset($juegos) && !$juegos->isEmpty())
         <ul>
