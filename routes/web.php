@@ -39,10 +39,10 @@ Route::get('/juego/{id}/descripcion', [JuegoController::class, 'descripcion'])->
 Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
 Route::get('/materia/{id}/descripcion', [MateriaController::class, 'descripcion'])->name('materia.descripcion');
 
-// Rutas para la administración de juegos, materias y proyectos
 Route::prefix('admin')->middleware('auth')->group(function() {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::resource('juegos', JuegoController::class);
     Route::resource('materias', MateriaController::class);
     Route::resource('proyectos', ProyectoController::class);
 });
+
