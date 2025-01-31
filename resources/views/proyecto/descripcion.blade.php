@@ -9,14 +9,14 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('juego.index') }}">Juegos</a></li>
-                    <li class="breadcrumb-item active">{{ $juego->nombre }}</li>
+                    <li class="breadcrumb-item"><a href="{{ route('proyecto.index') }}">Proyectos</a></li>
+                    <li class="breadcrumb-item active">{{ $proyecto->nombre }}</li>
                 </ol>
             </nav>
 
             <div class="container">
-                <h2>{{ $juego->nombre }}</h2>
-                <p>{{ $juego->descripcion }}</p>
+                <h2>{{ $proyecto->nombre }}</h2>
+                <p>{{ $proyecto->descripcion }}</p>
                 <a href="{{ route('menu.index') }}">Volver al menú</a>
             </div>
         </main>

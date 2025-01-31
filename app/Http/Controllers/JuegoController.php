@@ -28,6 +28,14 @@ class JuegoController extends Controller
         return view('juego.descripcion', compact('juego', 'juegos', 'materias', 'proyectos'));
     }
 
+
+        // Este es el método que se usa para mostrar la descripción del juego
+        public function show($id)
+        {
+            $juego = Juego::findOrFail($id); // Obtiene la materia por ID
+            return view('juego.descripcion', compact('juego')); // Pasar los datos a la vista
+        }
+
     public function create()
     {
         $usuarios = User::all(); // Obtener todos los usuarios

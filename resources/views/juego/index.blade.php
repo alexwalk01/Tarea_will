@@ -9,20 +9,20 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Materias</li>
+                    <li class="breadcrumb-item active" aria-current="page">Juegos</li>
                 </ol>
             </nav>
 
             <div class="container">
-                <h2>Materias disponibles</h2>
-                @if ($materias->isEmpty())
-                    <p>No tienes materias disponibles.</p>
+                <h2>Juego disponibles</h2>
+                @if ($juegos->isEmpty())
+                    <p>No tienes juegos disponibles.</p>
                 @else
                     <ul>
-                        @foreach ($materias as $materia)
+                        @foreach ($juegos as $juego)
                             <li>
-                                <a href="{{ route('materia.show', $materia->id) }}">
-                                    {{ $materia->nombre }}
+                                <a href="{{ route('juego.show', $juego->id) }}">
+                                    {{ $juego->nombre }}
                                 </a>
                             </li>
                         @endforeach

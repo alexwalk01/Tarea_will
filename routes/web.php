@@ -30,6 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/materias', [MateriaController::class, 'index'])->name('materia.index');
     Route::get('/materia/{id}', [MateriaController::class, 'show'])->name('materia.show');
     Route::get('/juegos', [JuegoController::class, 'index'])->name('juego.index');
+    Route::get('/juego/{id}', [JuegoController::class, 'show'])->name('juego.show');
     Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyecto.index');
     Route::get('/proyecto/{id}', [ProyectoController::class, 'show'])->name('proyecto.show');
 });
