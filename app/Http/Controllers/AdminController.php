@@ -17,7 +17,7 @@ class AdminController extends Controller
         $juegos = Juego::all();
         $materias = Materia::all();
         $proyectos = Proyecto::all();
-
+        
         // Pasar todas las variables a la vista
         return view('admin.index', compact('usuarios', 'juegos', 'materias', 'proyectos'));
     }
