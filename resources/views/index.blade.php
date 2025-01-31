@@ -1,4 +1,5 @@
 @extends('layouts.app')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 @section('content')
 <div class="container-fluid">
@@ -10,17 +11,11 @@
             </button>
             <div class="collapse d-md-block" id="sidebarMenu">
                 <ul class="nav flex-column">
-                    <!-- Cerrar sesión -->
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="#" onclick="logout()">
-                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                        </a>
-                    </li>
 
                     <!-- Menú desplegable para Juegos -->
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#collapseJuegos" role="button" aria-expanded="false" aria-controls="collapseJuegos">
-                            <i class="bi bi-gamepad"></i> Juegos <i class="bi bi-chevron-down float-end"></i>
+                        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseJuegos" role="button" aria-expanded="false" aria-controls="collapseJuegos">
+                            <i class="bi bi-gamepad"></i> Juegos <i class="bi bi-chevron-down float-end toggle-icon" id="iconJuegos"></i>
                         </a>
                         <div class="collapse" id="collapseJuegos">
                             <ul class="nav flex-column ms-3">
@@ -35,8 +30,8 @@
 
                     <!-- Menú desplegable para Materias -->
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#collapseMaterias" role="button" aria-expanded="false" aria-controls="collapseMaterias">
-                            <i class="bi bi-book"></i> Materias <i class="bi bi-chevron-down float-end"></i>
+                        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseMaterias" role="button" aria-expanded="false" aria-controls="collapseMaterias">
+                            <i class="bi bi-book"></i> Materias <i class="bi bi-chevron-down float-end toggle-icon" id="iconMaterias"></i>
                         </a>
                         <div class="collapse" id="collapseMaterias">
                             <ul class="nav flex-column ms-3">
@@ -51,8 +46,8 @@
 
                     <!-- Menú desplegable para Proyectos -->
                     <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="collapse" href="#collapseProyectos" role="button" aria-expanded="false" aria-controls="collapseProyectos">
-                            <i class="bi bi-briefcase"></i> Proyectos <i class="bi bi-chevron-down float-end"></i>
+                        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProyectos" role="button" aria-expanded="false" aria-controls="collapseProyectos">
+                            <i class="bi bi-briefcase"></i> Proyectos <i class="bi bi-chevron-down float-end toggle-icon" id="iconProyectos"></i>
                         </a>
                         <div class="collapse" id="collapseProyectos">
                             <ul class="nav flex-column ms-3">
@@ -119,28 +114,41 @@
     </div>
 </div>
 
-<script>
-    // Función para cerrar sesión
-    function logout() {
-        fetch('{{ route("logout") }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            credentials: 'same-origin'
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = '/login';
-            }
-            else {
-                alert('Error al cerrar sesión');
-            }
-        })
-        .catch(error => {
-            alert('Error al realizar la solicitud');
-        });
+<style>
+    .toggle-icon {
+        transition: transform 0.3s ease-in-out;
     }
+    .rotate {
+        transform: rotate(180deg);
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Función para alternar la rotación de la flecha
+        function toggleIcon(collapseId, iconId) {
+            let collapseElement = document.getElementById(collapseId);
+            let iconElement = document.getElementById(iconId);
+
+            // Asegúrate de aplicar el estado inicial (por si ya está expandido)
+            if (collapseElement.classList.contains("show")) {
+                iconElement.classList.add("rotate");
+            }
+
+            collapseElement.addEventListener("show.bs.collapse", function () {
+                iconElement.classList.add("rotate");
+            });
+
+            collapseElement.addEventListener("hide.bs.collapse", function () {
+                iconElement.classList.remove("rotate");
+            });
+        }
+
+        // Aplicar la función a cada menú
+        toggleIcon("collapseJuegos", "iconJuegos");
+        toggleIcon("collapseMaterias", "iconMaterias");
+        toggleIcon("collapseProyectos", "iconProyectos");
+    });
 </script>
 
 @endsection

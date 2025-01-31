@@ -11,9 +11,21 @@ class ProyectoController extends Controller
 {
     public function index()
     {
-        // Obtener todos los proyectos asociados al usuario autenticado
-        $proyectos = Auth::user()->proyectos; // Obtener proyectos del usuario autenticado
-        return view('proyecto.index', compact('proyectos')); // Pasa los proyectos a la vista index
+        $proyectos = Auth::user()->proyectos;
+        $juegos = Auth::user()->juegos;
+        $materias = Auth::user()->materias;
+
+        return view('proyecto.index', compact('proyectos', 'juegos', 'materias'));
+    }
+
+    public function descripcion($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        $juegos = Auth::user()->juegos;
+        $materias = Auth::user()->materias;
+        $proyectos = Auth::user()->proyectos;
+
+        return view('proyecto.descripcion', compact('proyecto', 'juegos', 'materias', 'proyectos'));
     }
 
     public function show($id)
@@ -22,11 +34,7 @@ class ProyectoController extends Controller
         return view('proyecto.descripcion', compact('proyecto')); // Pasar los datos a la vista
     }
 
-    public function descripcion($id)
-    {
-        $proyecto = Proyecto::findOrFail($id); // Obtiene el proyecto por ID
-        return view('proyecto.descripcion', compact('proyecto')); // Pasar los datos a la vista
-    }
+
 
     public function create()
     {

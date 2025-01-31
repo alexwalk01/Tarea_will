@@ -12,12 +12,11 @@ class MenuController extends Controller {
     public function index()
     {
         $user = Auth::user();
+        $juegos = $user->juegos;
+        $materias = $user->materias;
+        $proyectos = $user->proyectos;
 
-        return view('index', [
-            'juegos' => $user->juegos,
-            'materias' => $user->materias,
-            'proyectos' => $user->proyectos
-        ]);
+        return view('index', compact('juegos', 'materias', 'proyectos'));
     }
 
     public function section($name, $section)

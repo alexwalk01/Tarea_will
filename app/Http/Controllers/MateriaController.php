@@ -11,17 +11,22 @@ class MateriaController extends Controller
 {
     public function index()
     {
-        // Obtener todas las materias asociadas al usuario autenticado
-        $materias = Auth::user()->materias; // Obtener materias del usuario autenticado
-        return view('materia.index', compact('materias')); // Pasa las materias a la vista index
+        $materias = Auth::user()->materias;
+        $juegos = Auth::user()->juegos;
+        $proyectos = Auth::user()->proyectos;
+
+        return view('materia.index', compact('materias', 'juegos', 'proyectos'));
     }
 
     public function descripcion($id)
     {
-        $materia = Materia::findOrFail($id); // Busca la materia por ID
-        return view('materia.descripcion', compact('materia')); // Pasa la información de la materia a la vista
-    }
+        $materia = Materia::findOrFail($id);
+        $juegos = Auth::user()->juegos;
+        $materias = Auth::user()->materias;
+        $proyectos = Auth::user()->proyectos;
 
+        return view('materia.descripcion', compact('materia', 'juegos', 'materias', 'proyectos'));
+    }
     // Este es el método que se usa para mostrar la descripción de la materia
     public function show($id)
     {
