@@ -9,18 +9,23 @@ use Illuminate\Support\Facades\Auth;
 
 class JuegoController extends Controller
 {
-    // Método para mostrar todos los juegos
     public function index()
     {
-        $juegos = Auth::user()->juegos;  // Filtra los juegos según el usuario autenticado
-        return view('juego.index', compact('juegos'));  // Pasa los juegos a la vista
+        $juegos = Auth::user()->juegos;
+        $materias = Auth::user()->materias;
+        $proyectos = Auth::user()->proyectos;
+
+        return view('juego.index', compact('juegos', 'materias', 'proyectos'));
     }
 
-    // Método para mostrar la descripción de un juego específico
     public function descripcion($id)
     {
-        $juego = Juego::findOrFail($id); // Busca el juego por ID
-        return view('juego.descripcion', compact('juego')); // Pasa la información del juego a la vista
+        $juego = Juego::findOrFail($id);
+        $juegos = Auth::user()->juegos;
+        $materias = Auth::user()->materias;
+        $proyectos = Auth::user()->proyectos;
+
+        return view('juego.descripcion', compact('juego', 'juegos', 'materias', 'proyectos'));
     }
 
     public function create()
