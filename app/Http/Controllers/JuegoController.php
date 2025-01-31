@@ -12,7 +12,7 @@ class JuegoController extends Controller
     public function index()
     {
         $juegos = Juego::all();
-        return view('juegos.index', compact('juegos'));
+        return view('juego.index', compact('juegos'));
     }
 
     // Método para mostrar el menú del usuario con sus juegos
