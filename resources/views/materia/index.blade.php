@@ -3,10 +3,11 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <!-- Contenido principal -->
+        @include('layouts._sidebar') <!-- Se incluye el menú -->
+
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" id="breadcrumb">
+                <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Materias</li>
                 </ol>
@@ -20,7 +21,7 @@
                     <ul>
                         @foreach ($materias as $materia)
                             <li>
-                                <a href="{{ route('materia.show', $materia->id) }}">
+                                <a href="{{ route('materia.descripcion', $materia->id) }}">
                                     {{ $materia->nombre }}
                                 </a>
                             </li>

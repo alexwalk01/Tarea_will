@@ -3,25 +3,26 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <!-- Contenido principal -->
+        @include('layouts._sidebar') <!-- Se incluye el menú -->
+
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" id="breadcrumb">
+                <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Juegos</li>
+                    <li class="breadcrumb-item active" aria-current="page">Materias</li>
                 </ol>
             </nav>
 
             <div class="container">
-                <h2>Juegos disponibles</h2>
-                @if ($juegos->isEmpty())
-                    <p>No tienes juegos disponibles.</p>
+                <h2>Materias disponibles</h2>
+                @if ($materias->isEmpty())
+                    <p>No tienes materias disponibles.</p>
                 @else
                     <ul>
-                        @foreach ($juegos as $juego)
+                        @foreach ($materias as $materia)
                             <li>
-                                <a href="{{ route('juego.descripcion', $juego->id) }}">
-                                    {{ $juego->nombre }}
+                                <a href="{{ route('materia.show', $materia->id) }}">
+                                    {{ $materia->nombre }}
                                 </a>
                             </li>
                         @endforeach
