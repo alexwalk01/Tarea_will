@@ -20,7 +20,8 @@ class MenuController extends Controller {
         ]);
     }
 
-    public function section($name, $section) {
+    public function section($name, $section)
+    {
         if (Auth::user()->name !== ucfirst($name)) {
             abort(403);
         }

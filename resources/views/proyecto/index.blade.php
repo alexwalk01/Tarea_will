@@ -1,33 +1,34 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú</title>
-</head>
-<body>
-    <h1>Menú</h1>
+@extends('layouts.app')
 
-    <h2>Juegos</h2>
-    @if (isset($juegos) && !$juegos->isEmpty())
-        <ul>
-            @foreach ($juegos as $juego)
-                <li>
-                    <a href="{{ route('juegos.descripcion', $juego->id) }}">{{ $juego->nombre }}</a>
-                </li>
-            @endforeach
-        </ul>
-    @else
-        <p>No hay juegos disponibles.</p>
-    @endif
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <!-- Contenido principal -->
+        <main class="col-12 col-md-9 col-lg-10 content">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb" id="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Materias</li>
+                </ol>
+            </nav>
 
-    <a href="{{ route('logout') }}"
-       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-       Cerrar sesión
-    </a>
-
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
-</body>
-</html>
+            <div class="container">
+                <h2>Materias disponibles</h2>
+                @if ($proyectos->isEmpty())
+                    <p>No tienes proyectos disponibles.</p>
+                @else
+                    <ul>
+                        @foreach ($proyectos as $proyecto)
+                            <li>
+                                <a href="{{ route('proyecto.show', $proyecto->id) }}">
+                                    {{ $proyecto->nombre }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </main>
+    </div>
+</div>
+@endsection
