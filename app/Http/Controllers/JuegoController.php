@@ -12,13 +12,8 @@ class JuegoController extends Controller
     // Método para mostrar todos los juegos
     public function index()
     {
-<<<<<<< HEAD
-        $juegos = Juego::all();
-        return view('juego.index', compact('juegos'));
-=======
         $juegos = Auth::user()->juegos;  // Filtra los juegos según el usuario autenticado
         return view('juego.index', compact('juegos'));  // Pasa los juegos a la vista
->>>>>>> 1f22b99a64f367f7d189eff8c2b16b5e23995d2f
     }
 
     // Método para mostrar la descripción de un juego específico
