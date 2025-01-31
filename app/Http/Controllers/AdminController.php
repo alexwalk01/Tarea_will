@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Juego;
+use App\Models\Materia;
+use App\Models\Proyecto;
+
+class AdminController extends Controller
+{
+    public function index()
+    {
+        // Obtener los usuarios, juegos, materias y proyectos
+        $usuarios = User::all();
+        $juegos = Juego::all();
+        $materias = Materia::all();
+        $proyectos = Proyecto::all();
+
+        // Pasar todas las variables a la vista
+        return view('admin.index', compact('usuarios', 'juegos', 'materias', 'proyectos'));
+    }
+}

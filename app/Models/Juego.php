@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Juego extends Model
 {
-    use HasFactory;
+    protected $fillable = ['nombre', 'descripcion', 'user_id']; // Agregar 'user_id' a los campos fillables
 
-    protected $table = 'juegos'; // Asegúrate de que el nombre coincida con tu tabla en la base de datos
-
-    protected $fillable = ['nombre', 'descripcion', 'categoria_id'];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id'); // Relación inversa con el modelo User
+    }
 }

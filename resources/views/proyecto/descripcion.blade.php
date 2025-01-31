@@ -16,7 +16,7 @@
             <div class="container">
                 <h2>{{ $proyecto->nombre }}</h2>
                 <p><strong>Descripción:</strong> {{ $proyecto->descripcion }}</p>
-                <
+
             </div>
         </main>
     </div>

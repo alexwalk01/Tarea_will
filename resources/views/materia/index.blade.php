@@ -31,20 +31,4 @@
         </main>
     </div>
 </div>
-
-<script>
-    // Función para cerrar sesión
-    function logout() {
-        fetch('/logout', {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
-            credentials: 'same-origin'
-        })
-        .then(response => {
-            if (response.ok) { window.location.href = '/login'; }
-            else { alert('Error al cerrar sesión'); }
-        })
-        .catch(error => { alert('Error al realizar la solicitud'); });
-    }
-</script>
 @endsection
