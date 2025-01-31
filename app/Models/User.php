@@ -9,21 +9,23 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+     /** @use HasFactory<\Database\Factories\UserFactory> */
+     use HasFactory, Notifiable;
     public function juegos()
     {
         return $this->hasMany(Juego::class);
     }
 
-
-    public function materias() {
+    public function materias()
+    {
         return $this->hasMany(Materia::class);
     }
 
-    public function proyectos() {
+    public function proyectos()
+    {
         return $this->hasMany(Proyecto::class);
     }
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+
 
     /**
      * The attributes that are mass assignable.

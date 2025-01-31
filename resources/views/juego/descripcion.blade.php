@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('content')
 <!DOCTYPE html>
 <html lang="es">
@@ -7,16 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Descripción del Juego</title>
 </head>
-
-
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb" id="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
         <li class="breadcrumb-item"><a href="{{ route('juego.index') }}">Juegos</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{ $juego->nombre }}</li>
-    </ol>
+    </ol>
 </nav>
-
 <body>
     <h1>{{ $juego->nombre }}</h1>
     <p>{{ $juego->descripcion }}</p>
@@ -25,3 +23,4 @@
 </html>
 @endsection
 
+@endsection
