@@ -14,7 +14,7 @@
         <ul>
             @foreach ($juegos as $juego)
                 <li>
-                    <a href="{{ route('juegos.index') }}">{{ $juego->nombre }}</a>
+                    <a href="{{ route('juego.index') }}">{{ $juego->nombre }}</a>
                 </li>
             @endforeach
         </ul>
