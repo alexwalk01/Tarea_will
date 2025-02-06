@@ -1,8 +1,10 @@
 // Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
+// Importar funciones y variables de Bootstrap
+@import "node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
 
-// Variables
-@import 'variables';
+// Otras configuraciones de tu proyecto
+$display-font-weight: 400; // Sobreescribir variable si es necesario
 
-// Bootstrap
-@import 'bootstrap/scss/bootstrap';
+// Importar Bootstrap completo
+@import "node_modules/bootstrap/scss/bootstrap";

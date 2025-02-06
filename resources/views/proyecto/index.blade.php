@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        @include('layouts._sidebar') <!-- Se incluye el menú aquí -->
+        @include('layouts._sidebar') <!-- Se incluye el menú -->
 
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">

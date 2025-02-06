@@ -82,4 +82,13 @@ class JuegoController extends Controller
 
         return redirect()->route('admin.index')->with('success', 'Juego actualizado correctamente.');
     }
+
+    public function buscar(Request $request)
+    {
+        $nombre = $request->input('nombre');
+
+        $juegos = Juego::where('nombre', 'like', '%' . $nombre . '%')->get();
+
+        return view('juego.index', compact('juegos'));
+    }
 }

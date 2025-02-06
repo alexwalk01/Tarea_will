@@ -61,9 +61,21 @@
                             </div>
                         </div>
 
+                        <!-- Aviso de privacidad -->
+                        <div class="row mb-3">
+                            <div class="col-md-6 offset-md-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="privacy-check" onchange="toggleRegisterButton()">
+                                    <label class="form-check-label" for="privacy-check">
+                                        Acepto el <a href="#" target="_blank">aviso de privacidad</a>.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary" id="register-button" disabled>
                                     {{ __('Register') }}
                                 </button>
                             </div>
@@ -74,4 +86,12 @@
         </div>
     </div>
 </div>
+
+<script>
+    function toggleRegisterButton() {
+        const privacyCheck = document.getElementById('privacy-check');
+        const registerButton = document.getElementById('register-button');
+        registerButton.disabled = !privacyCheck.checked;
+    }
+</script>
 @endsection
