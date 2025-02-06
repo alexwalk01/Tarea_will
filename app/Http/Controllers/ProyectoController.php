@@ -78,4 +78,13 @@ class ProyectoController extends Controller
 
         return redirect()->route('proyectos.index')->with('success', 'Proyecto actualizado correctamente.');
     }
+
+    public function buscar(Request $request)
+    {
+        $nombre = $request->input('nombre');
+
+        $proyectos = Proyecto::where('nombre', 'like', '%' . $nombre . '%')->get();
+
+        return view('proyecto.index', compact('proyectos'));
+    }
 }

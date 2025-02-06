@@ -83,4 +83,13 @@ class MateriaController extends Controller
 
         return redirect()->route('materias.index')->with('success', 'Materia actualizada correctamente.');
     }
+
+    public function buscar(Request $request)
+    {
+        $nombre = $request->input('nombre');
+
+        $materias = Materia::where('nombre', 'like', '%' . $nombre . '%')->get();
+
+        return view('materia.index', compact('materias'));
+    }
 }
