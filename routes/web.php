@@ -7,6 +7,7 @@ use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProyectoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\BusquedaController;
 
 Auth::routes();
 
@@ -14,6 +15,9 @@ Auth::routes();
 Route::get('/', function () {
     return redirect()->route('login');
 });
+
+// web.php
+Route::get('/buscar', [BusquedaController::class, 'buscar'])->name('buscar.general');
 
 // Rutas para el menú principal
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
