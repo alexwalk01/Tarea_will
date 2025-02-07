@@ -18,7 +18,7 @@
                         <option value="materias" {{ request('categoria') == 'materias' ? 'selected' : '' }}>Materias</option>
                         <option value="proyectos" {{ request('categoria') == 'proyectos' ? 'selected' : '' }}>Proyectos</option>
                     </select>
-                    <input type="text" name="nombre" placeholder="Buscar..." value="{{ request('nombre') }}" style="padding: 5px; font-size: 14px;">
+                    <input required type="text" name="nombre" placeholder="Buscar..." value="{{ request('nombre') }}" style="padding: 5px; font-size: 14px;">
                     <button type="submit" style="padding: 5px 10px; font-size: 14px; cursor: pointer;">Buscar</button>
                 </form>
 
