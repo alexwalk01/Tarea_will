@@ -1,13 +1,12 @@
 <?php
 
-// app/Http/Controllers/BusquedaController.php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Juego;
 use App\Models\Materia;
 use App\Models\Proyecto;
+use Illuminate\Support\Facades\Auth;
 
 class BusquedaController extends Controller
 {
@@ -16,23 +15,71 @@ class BusquedaController extends Controller
         $query = $request->input('nombre');
         $categoria = $request->input('categoria');
 
-        switch ($categoria) {
-            case 'juegos':
-                $resultados = Juego::where('nombre', 'LIKE', "%{$query}%")->get();
-                break;
-            case 'materias':
-                $resultados = Materia::where('nombre', 'LIKE', "%{$query}%")->get();
-                break;
-            case 'proyectos':
-                $resultados = Proyecto::where('nombre', 'LIKE', "%{$query}%")->get();
-                break;
-            default:
-                $resultados = collect();
-                break;
+        $resultados = [];
+
+        if ($categoria === 'all' || $categoria === null) { // Búsqueda general
+            $resultadosJuegos = $this->buscarEnModelo(Juego::class, $query);
+            $resultadosMaterias = $this->buscarEnModelo(Materia::class, $query);
+            $resultadosProyectos = $this->buscarEnModelo(Proyecto::class, $query);
+
+            // Combina los resultados de todas las categorías
+            $resultados = array_merge($resultadosJuegos, $resultadosMaterias, $resultadosProyectos);
+
+        } else { // Búsqueda por categoría específica
+            $resultados = $this->buscarEnModelo(
+                $this->getModeloPorCategoria($categoria),
+                $query
+            );
         }
 
         return view('resultados', compact('resultados', 'query', 'categoria'));
     }
+
+    private function buscarEnModelo($modelo, $query)
+    {
+        $resultados = [];
+        $usuario_id = Auth::id();
+
+        $items = $modelo::where('user_id', $usuario_id)->get();
+
+        foreach ($items as $item) {
+            if (stripos($item->nombre, $query) !== false || stripos($item->descripcion, $query) !== false) {
+                if (!isset($resultados[$item->id])) { // Evita duplicados
+                    $resultados[$item->id] = [
+                        'modelo' => $modelo,
+                        'resultado' => $item,
+                        'coincidencia' => stripos($item->nombre, $query) !== false ? 'nombre' : 'descripcion',
+                        'fragmento_descripcion' => $this->generarFragmento($item->descripcion, $query)
+                    ];
+                }
+            }
+        }
+        return array_values($resultados);
+    }
+
+    private function generarFragmento($descripcion, $query)
+    {
+        $posicion = stripos($descripcion, $query);
+        if ($posicion !== false) {
+            $inicio = max(0, $posicion - 50);
+            $fin = min(strlen($descripcion), $posicion + strlen($query) + 50);
+            return "..." . substr($descripcion, $inicio, $fin - $inicio) . "...";
+        } else {
+            return substr($descripcion, 0, 100) . "...";
+        }
+    }
+
+    private function getModeloPorCategoria($categoria)
+    {
+        switch ($categoria) {
+            case 'juegos':
+                return Juego::class;
+            case 'materias':
+                return Materia::class;
+            case 'proyectos':
+                return Proyecto::class;
+            default:
+                return null; // Manejo de categoría no válida
+        }
+    }
 }
-
-

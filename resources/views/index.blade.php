@@ -11,14 +11,19 @@
             </button>
             <div class="collapse d-md-block" id="sidebarMenu">
                 <ul class="nav flex-column">
-
+                <!-- Nuevo buscador general -->
+                <form action="{{ route('buscar.general') }}" method="GET" style="position: fixed; top: 5%; right: 200px; z-index: 1000; display: flex; gap: 5px; align-items: center; transform: translateY(-50%); font-size: 12px;">
+            <input required type="text" name="nombre" placeholder="Búsqueda general..." value="{{ request('nombre') }}" style="padding: 3px; font-size: 12px;">
+            <button type="submit" style="padding: 3px 8px; font-size: 12px; cursor: pointer;">Buscar</button>
+            </form>
+                
                 <form action="{{ route('buscar.general') }}" method="GET" style="position: fixed; top: 20%; right: 10px; z-index: 1000; display: flex; gap: 10px; align-items: center; transform: translateY(-50%);">
                     <select name="categoria" style="padding: 5px; font-size: 14px;">
                         <option value="juegos" {{ request('categoria') == 'juegos' ? 'selected' : '' }}>Juegos</option>
                         <option value="materias" {{ request('categoria') == 'materias' ? 'selected' : '' }}>Materias</option>
                         <option value="proyectos" {{ request('categoria') == 'proyectos' ? 'selected' : '' }}>Proyectos</option>
                     </select>
-                    <input type="text" name="nombre" placeholder="Buscar..." value="{{ request('nombre') }}" style="padding: 5px; font-size: 14px;">
+                    <input required type="text" name="nombre" placeholder="Buscar..." value="{{ request('nombre') }}" style="padding: 5px; font-size: 14px;">
                     <button type="submit" style="padding: 5px 10px; font-size: 14px; cursor: pointer;">Buscar</button>
                 </form>
 
