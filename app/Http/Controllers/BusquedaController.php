@@ -17,18 +17,19 @@ class BusquedaController extends Controller
 
         $resultados = [];
 
-        switch ($categoria) {
-            case 'juegos':
-                $resultados = $this->buscarEnModelo(Juego::class, $query);
-                break;
-            case 'materias':
-                $resultados = $this->buscarEnModelo(Materia::class, $query);
-                break;
-            case 'proyectos':
-                $resultados = $this->buscarEnModelo(Proyecto::class, $query);
-                break;
-            default:
-                break;
+        if ($categoria === 'all' || $categoria === null) { // Búsqueda general
+            $resultadosJuegos = $this->buscarEnModelo(Juego::class, $query);
+            $resultadosMaterias = $this->buscarEnModelo(Materia::class, $query);
+            $resultadosProyectos = $this->buscarEnModelo(Proyecto::class, $query);
+
+            // Combina los resultados de todas las categorías
+            $resultados = array_merge($resultadosJuegos, $resultadosMaterias, $resultadosProyectos);
+
+        } else { // Búsqueda por categoría específica
+            $resultados = $this->buscarEnModelo(
+                $this->getModeloPorCategoria($categoria),
+                $query
+            );
         }
 
         return view('resultados', compact('resultados', 'query', 'categoria'));
@@ -43,8 +44,7 @@ class BusquedaController extends Controller
 
         foreach ($items as $item) {
             if (stripos($item->nombre, $query) !== false || stripos($item->descripcion, $query) !== false) {
-                // Verifica si el resultado ya existe en el array
-                if (!isset($resultados[$item->id])) {
+                if (!isset($resultados[$item->id])) { // Evita duplicados
                     $resultados[$item->id] = [
                         'modelo' => $modelo,
                         'resultado' => $item,
@@ -54,7 +54,7 @@ class BusquedaController extends Controller
                 }
             }
         }
-        return array_values($resultados); // Devuelve los resultados como un array simple
+        return array_values($resultados);
     }
 
     private function generarFragmento($descripcion, $query)
@@ -66,6 +66,20 @@ class BusquedaController extends Controller
             return "..." . substr($descripcion, $inicio, $fin - $inicio) . "...";
         } else {
             return substr($descripcion, 0, 100) . "...";
+        }
+    }
+
+    private function getModeloPorCategoria($categoria)
+    {
+        switch ($categoria) {
+            case 'juegos':
+                return Juego::class;
+            case 'materias':
+                return Materia::class;
+            case 'proyectos':
+                return Proyecto::class;
+            default:
+                return null; // Manejo de categoría no válida
         }
     }
 }

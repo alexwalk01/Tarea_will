@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2>Resultados de búsqueda para: "{{ $query }}" en "{{ ucfirst($categoria) }}"</h2>
+    <h2>Resultados de búsqueda para: "{{ $query }}"</h2>
 
     @if(empty($resultados))
-        <p>No se encontraron resultados en la categoría "{{ ucfirst($categoria) }}".</p>
+        <p>No se encontraron resultados.</p>
         <div class="text-center mt-3">
             <a href="{{ url('/') }}" class="btn btn-primary">Volver al inicio</a>
         </div>
@@ -15,11 +15,11 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <h5 class="card-title">
-                                @if($categoria == 'juegos')
+                                @if($resultado['modelo'] == App\Models\Juego::class)
                                     <a href="{{ route('juegos.show', $resultado['resultado']->id) }}">{{ $resultado['resultado']->nombre }}</a>
-                                @elseif($categoria == 'materias')
+                                @elseif($resultado['modelo'] == App\Models\Materia::class)
                                     <a href="{{ route('materias.show', $resultado['resultado']->id) }}">{{ $resultado['resultado']->nombre }}</a>
-                                @elseif($categoria == 'proyectos')
+                                @elseif($resultado['modelo'] == App\Models\Proyecto::class)
                                     <a href="{{ route('proyectos.show', $resultado['resultado']->id) }}">{{ $resultado['resultado']->nombre }}</a>
                                 @endif
                             </h5>
