@@ -17,49 +17,49 @@ class BusquedaController extends Controller
 
         $resultados = [];
 
-        if ($categoria === 'all' || $categoria === null) { // Búsqueda general
-            $resultadosJuegos = $this->buscarEnModelo(Juego::class, $query);
-            $resultadosMaterias = $this->buscarEnModelo(Materia::class, $query);
-            $resultadosProyectos = $this->buscarEnModelo(Proyecto::class, $query);
-
-            // Combina los resultados de todas las categorías
-            $resultados = array_merge($resultadosJuegos, $resultadosMaterias, $resultadosProyectos);
-
-        } else { // Búsqueda por categoría específica
+        if ($categoria === 'all' || $categoria === null) {
+            $resultados = array_merge(
+                $this->buscarEnModelo(Juego::class, $query),
+                $this->buscarEnModelo(Materia::class, $query),
+                $this->buscarEnModelo(Proyecto::class, $query)
+            );
+        } else {
             $resultados = $this->buscarEnModelo(
                 $this->getModeloPorCategoria($categoria),
                 $query
             );
         }
 
-        return view('resultados', compact('resultados', 'query', 'categoria'));
+        return response()->json(['resultados' => $resultados]); // Respuesta en JSON
     }
 
     private function buscarEnModelo($modelo, $query)
     {
-        $resultados = [];
         $usuario_id = Auth::id();
 
-        $items = $modelo::where('user_id', $usuario_id)->get();
+        $items = $modelo::where('user_id', $usuario_id)
+            ->where(function ($q) use ($query) {
+                $q->where('nombre', 'LIKE', "%" . $query . "%")
+                  ->orWhere('descripcion', 'LIKE', "%" . $query . "%");
+            })
+            ->get();
 
-        foreach ($items as $item) {
-            if (stripos($item->nombre, $query) !== false || stripos($item->descripcion, $query) !== false) {
-                if (!isset($resultados[$item->id])) { // Evita duplicados
-                    $resultados[$item->id] = [
-                        'modelo' => $modelo,
-                        'resultado' => $item,
-                        'coincidencia' => stripos($item->nombre, $query) !== false ? 'nombre' : 'descripcion',
-                        'fragmento_descripcion' => $this->generarFragmento($item->descripcion, $query)
-                    ];
-                }
-            }
-        }
-        return array_values($resultados);
+        return $items->map(function ($item) use ($modelo, $query) {
+            return [
+                'modelo' => $modelo,
+                'resultado' => $item,
+                'coincidencia' => stripos($item->nombre, $query) !== false ? 'nombre' : 'descripcion',
+                'fragmento_descripcion' => $this->generarFragmento($item->descripcion, $query),
+            ];
+        })->toArray();
     }
+
 
     private function generarFragmento($descripcion, $query)
     {
+        $descripcion = strip_tags($descripcion); // Elimina etiquetas HTML
         $posicion = stripos($descripcion, $query);
+
         if ($posicion !== false) {
             $inicio = max(0, $posicion - 50);
             $fin = min(strlen($descripcion), $posicion + strlen($query) + 50);
@@ -79,7 +79,7 @@ class BusquedaController extends Controller
             case 'proyectos':
                 return Proyecto::class;
             default:
-                return null; // Manejo de categoría no válida
+                return null;
         }
     }
 }
