@@ -70,32 +70,79 @@
     .rotate {
         transform: rotate(180deg);
     }
+    /* Efecto para los íconos del menú */
+.toggle-icon {
+    transition: transform 0.3s ease-in-out;
+}
+.rotate {
+    transform: rotate(180deg);
+}
+
+/* Efecto hover en los enlaces del menú */
+.nav-link {
+    position: relative;
+    color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.nav-link:hover {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    transform: scale(1.05);
+}
+
+/* Efecto "iluminación" al pasar el mouse */
+.nav-link::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 0;
+    background-color: #007bff;
+    transition: height 0.3s ease, top 0.3s ease;
+}
+.nav-link:hover::before {
+    height: 100%;
+    top: 0;
+}
+
+/* Animación de despliegue más fluida */
+.collapse {
+    transition: height 0.3s ease-in-out;
+}
+
 </style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Función para alternar la rotación de la flecha
-        function toggleIcon(collapseId, iconId) {
-            let collapseElement = document.getElementById(collapseId);
-            let iconElement = document.getElementById(iconId);
+        document.querySelectorAll('.nav-link[data-bs-toggle="collapse"]').forEach(link => {
+            let targetId = link.getAttribute("href").substring(1);
+            let icon = link.querySelector(".toggle-icon");
 
-            // Asegúrate de aplicar el estado inicial (por si ya está expandido)
+            // Manejar el estado inicial
+            let collapseElement = document.getElementById(targetId);
             if (collapseElement.classList.contains("show")) {
-                iconElement.classList.add("rotate");
+                icon.classList.add("rotate");
             }
 
+            // Agregar eventos de Bootstrap para animar los íconos
             collapseElement.addEventListener("show.bs.collapse", function () {
-                iconElement.classList.add("rotate");
+                icon.classList.add("rotate");
             });
-
             collapseElement.addEventListener("hide.bs.collapse", function () {
-                iconElement.classList.remove("rotate");
+                icon.classList.remove("rotate");
             });
-        }
+        });
 
-        // Aplicar la función a cada menú
-        toggleIcon("collapseJuegos", "iconJuegos");
-        toggleIcon("collapseMaterias", "iconMaterias");
-        toggleIcon("collapseProyectos", "iconProyectos");
+        // Efecto de "iluminación" al pasar el mouse en los enlaces
+        document.querySelectorAll(".nav-link").forEach(link => {
+            link.addEventListener("mouseenter", function () {
+                this.style.boxShadow = "0 0 10px rgba(0, 123, 255, 0.5)";
+            });
+            link.addEventListener("mouseleave", function () {
+                this.style.boxShadow = "none";
+            });
+        });
     });
 </script>

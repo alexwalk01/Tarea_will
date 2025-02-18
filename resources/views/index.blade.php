@@ -29,26 +29,12 @@
                 </div>
             </nav>
 
-            <!-- Contenido principal -->
             <div class="container">
-                <h2>Proyectos disponibles</h2>
-                @if ($proyectos->isEmpty())
-                    <p>No tienes proyectos disponibles.</p>
-                @else
-                    <ul>
-                        @foreach ($proyectos as $proyecto)
-                            <li>
-                                <a href="{{ route('proyecto.show', $proyecto->id) }}">
-                                    {{ $proyecto->nombre }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
+                <h2>Bienvenid@, {{ Auth::user()->name }}</h2>
 
-            <!-- Resultados de búsqueda -->
+
             <div id="resultadosBusqueda" class="row mt-4"> </div>
+            </div>
         </main>
     </div>
 </div>
