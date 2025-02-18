@@ -1,6 +1,6 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <nav class="col-12 col-md-3 col-lg-2 sidebar" id="sidebar">
     <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
         <i class="bi bi-list"></i> Menú
@@ -12,7 +12,7 @@
             <!-- Juegos -->
             <li class="nav-item">
                 <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseJuegos" role="button">
-                    <span><i class="bi bi-gamepad"></i> Juegos</span>
+                    <span><i class="bi bi-controller"></i> Juegos</span>
                     <i class="bi bi-chevron-down float-end toggle-icon" id="iconJuegos"></i>
                 </a>
                 <div class="collapse" id="collapseJuegos">
@@ -110,6 +110,10 @@
 /* Animación de despliegue más fluida */
 .collapse {
     transition: height 0.3s ease-in-out;
+}
+.bi {
+    font-size: 1.2rem; /* Ajusta el tamaño */
+    margin-right: 8px; /* Espacio entre el icono y el texto */
 }
 
 </style>
