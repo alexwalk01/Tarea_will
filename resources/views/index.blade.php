@@ -3,64 +3,17 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <!-- Menú lateral -->
-        <nav class="col-12 col-md-3 col-lg-2 sidebar" id="sidebar">
-            <button class="btn btn-primary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-                <i class="bi bi-list"></i> Menú
-            </button>
-            <div class="collapse d-md-block" id="sidebarMenu">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseJuegos" role="button" aria-expanded="false" aria-controls="collapseJuegos">
-                            <i class="bi bi-gamepad"></i> Juegos <i class="bi bi-chevron-down float-end toggle-icon" id="iconJuegos"></i>
-                        </a>
-                        <div class="collapse" id="collapseJuegos">
-                            <ul class="nav flex-column ms-3">
-                                @foreach ($juegos as $juego)
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('juego.descripcion', ['id' => $juego->id]) }}">{{ $juego->nombre }}</a>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </li>
+        @include('layouts._sidebar') <!-- Se incluye el menú -->
 
-                    <li class="nav-item">
-                        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseMaterias" role="button" aria-expanded="false" aria-controls="collapseMaterias">
-                            <i class="bi bi-book"></i> Materias <i class="bi bi-chevron-down float-end toggle-icon" id="iconMaterias"></i>
-                        </a>
-                        <div class="collapse" id="collapseMaterias">
-                            <ul class="nav flex-column ms-3">
-                                @foreach ($materias as $materia)
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('materia.descripcion', ['id' => $materia->id]) }}">{{ $materia->nombre }}</a>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProyectos" role="button" aria-expanded="false" aria-controls="collapseProyectos">
-                            <i class="bi bi-briefcase"></i> Proyectos <i class="bi bi-chevron-down float-end toggle-icon" id="iconProyectos"></i>
-                        </a>
-                        <div class="collapse" id="collapseProyectos">
-                            <ul class="nav flex-column ms-3">
-                                @foreach ($proyectos as $proyecto)
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('proyecto.descripcion', ['id' => $proyecto->id]) }}">{{ $proyecto->nombre }}</a>
-                                </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Contenido principal -->
         <main class="col-12 col-md-9 col-lg-10 content">
-            <!-- Barra de búsqueda en la parte superior -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
+
+                </ol>
+            </nav>
+
+            <!-- Barra de búsqueda -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
                 <div class="container-fluid">
                     <form id="busquedaForm" class="d-flex ms-auto">
@@ -76,33 +29,23 @@
                 </div>
             </nav>
 
-            <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb" id="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                </ol>
-            </nav>
-
             <div class="container">
-                <h2>Bienvenido, {{ Auth::user()->name }}</h2>
+                <h2>Bienvenid@, {{ Auth::user()->name }}</h2>
 
-                <div id="resultadosBusqueda" class="row"> </div>
+
+            <div id="resultadosBusqueda" class="row mt-4"> </div>
             </div>
         </main>
     </div>
 </div>
 
 <style>
-    .toggle-icon {
-        transition: transform 0.3s ease-in-out;
-    }
-    .rotate {
-        transform: rotate(180deg);
-    }
-
     .card {
         border: 1px solid #eee;
         margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
     }
 
     .card-title a {
@@ -135,21 +78,23 @@
                     if (data.resultados && data.resultados.length > 0) {
                         data.resultados.forEach(resultado => {
                             const card = document.createElement('div');
-                            card.classList.add('col-md-4', 'card'); // Añade clases para el diseño de tarjeta
+                            card.classList.add('col-md-4', 'mb-3');
 
                             let link = "";
-                            if (resultado.modelo === "App\Models\Juego") {
-                                link = `/juego/${resultado.resultado.id}/descripcion`;
-                            } else if (resultado.modelo === "App\Models\Materia") {
-                                link = `/materia/${resultado.resultado.id}/descripcion`;
-                            } else if (resultado.modelo === "App\Models\Proyecto") {
-                                link = `/proyecto/${resultado.resultado.id}/descripcion`;
+                            if (resultado.modelo === "App\\Models\\Juego") {
+                                link = `/juego/${resultado.resultado.id}`;
+                            } else if (resultado.modelo === "App\\Models\\Materia") {
+                                link = `/materia/${resultado.resultado.id}`;
+                            } else if (resultado.modelo === "App\\Models\\Proyecto") {
+                                link = `/proyecto/${resultado.resultado.id}`;
                             }
 
                             card.innerHTML = `
-                                <div class="card-body">
-                                    <h5 class="card-title"><a href="${link}">${resultado.resultado.nombre}</a></h5>
-                                    <p class="card-text">${resultado.fragmento_descripcion}</p>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><a href="${link}" class="text-decoration-none">${resultado.resultado.nombre}</a></h5>
+                                        <p class="card-text">${resultado.fragmento_descripcion}</p>
+                                    </div>
                                 </div>
                             `;
 
