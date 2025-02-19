@@ -120,33 +120,43 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const menuStateKey = "menuState"; // Clave para localStorage
+        let menuState = JSON.parse(localStorage.getItem(menuStateKey)) || {}; // Obtener estado previo
+
+        // Recorremos todas las secciones colapsables del menú
         document.querySelectorAll('.nav-link[data-bs-toggle="collapse"]').forEach(link => {
             let targetId = link.getAttribute("href").substring(1);
+            let collapseElement = document.getElementById(targetId);
             let icon = link.querySelector(".toggle-icon");
 
-            // Manejar el estado inicial
-            let collapseElement = document.getElementById(targetId);
-            if (collapseElement.classList.contains("show")) {
+            // **Antes de que Bootstrap actúe**, forzamos el estado guardado
+            if (menuState[targetId]) {
+                collapseElement.classList.add("show");
                 icon.classList.add("rotate");
             }
 
-            // Agregar eventos de Bootstrap para animar los íconos
+            // Cuando se abre, lo guardamos en localStorage
             collapseElement.addEventListener("show.bs.collapse", function () {
+                menuState[targetId] = true;
+                localStorage.setItem(menuStateKey, JSON.stringify(menuState));
                 icon.classList.add("rotate");
             });
+
+            // Cuando se cierra, actualizamos el estado en localStorage
             collapseElement.addEventListener("hide.bs.collapse", function () {
+                menuState[targetId] = false;
+                localStorage.setItem(menuStateKey, JSON.stringify(menuState));
                 icon.classList.remove("rotate");
             });
         });
 
-        // Efecto de "iluminación" al pasar el mouse en los enlaces
-        document.querySelectorAll(".nav-link").forEach(link => {
-            link.addEventListener("mouseenter", function () {
-                this.style.boxShadow = "0 0 10px rgba(0, 123, 255, 0.5)";
-            });
-            link.addEventListener("mouseleave", function () {
-                this.style.boxShadow = "none";
+        // Evitar que el menú colapsable se cierre al hacer clic en los enlaces internos
+        document.querySelectorAll("#sidebarMenu .collapse .nav-link").forEach(link => {
+            link.addEventListener("click", function (event) {
+                event.stopPropagation(); // Evita que el clic cierre el menú
             });
         });
     });
 </script>
+
+
