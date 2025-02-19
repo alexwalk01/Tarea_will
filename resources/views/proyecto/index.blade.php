@@ -23,7 +23,7 @@
                             <option value="materias">Materias</option>
                             <option value="proyectos">Proyectos</option>
                         </select>
-                        <input type="text" id="nombreInput" name="nombre" placeholder="Buscar..." class="form-control me-2">
+                        <input required type="text" id="nombreInput" name="nombre" placeholder="Buscar..." class="form-control me-2">
                         <button type="submit" class="btn btn-primary">Buscar</button>
                     </form>
                 </div>
