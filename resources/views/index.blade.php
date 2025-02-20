@@ -31,9 +31,38 @@
 
             <div class="container">
                 <h2>Bienvenid@, {{ Auth::user()->name }}</h2>
-
-
-            <div id="resultadosBusqueda" class="row mt-4"> </div>
+                <div>
+                <div class="carousel-wrapper">
+  <div id="carouselExample" class="carousel slide carousel-container" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <a href="{{ route('materia.index') }}">
+          <img src="{{ asset('images/imagen1.jpg') }}" class="d-block w-100" alt="Imagen 1">
+        </a>
+      </div>
+      <div class="carousel-item">
+        <a href="{{ route('juego.index') }}">
+          <img src="{{ asset('images/imagen2.jpg') }}" class="d-block w-100" alt="Imagen 2">
+        </a>
+      </div>
+      <div class="carousel-item">
+        <a href="{{ route('proyecto.index') }}">
+          <img src="{{ asset('images/imagen3.jpg') }}" class="d-block w-100" alt="Imagen 3">
+        </a>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+                </div>
+                <div id="resultadosBusqueda" class="row mt-4"> </div>
             </div>
         </main>
     </div>
@@ -52,6 +81,29 @@
         color: #333;
         text-decoration: none;
     }
+
+
+
+  /* Contenedor que centra el carrusel en la pantalla */
+  .carousel-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Asegura que el carrusel esté centrado verticalmente */
+  }
+
+  /* Tamaño reducido del carrusel */
+  .carousel-container {
+    max-width: 400px; /* Ancho del carrusel */
+    max-height: 250px; /* Altura máxima */
+    width: 100%;
+  }
+
+  /* Ajuste de imágenes dentro del carrusel */
+  .carousel-inner img {
+    max-height: 250px; /* Mantiene la altura máxima */
+    object-fit: contain; /* Evita que la imagen se deforme o recorte */
+  }
 </style>
 
 <script>
