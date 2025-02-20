@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class MateriaController extends Controller
 {
+    public function cargarMasMaterias(Request $request)
+{
+    $offset = $request->input('offset', 0);
+    $limit = 3;
+
+    $materias = Auth::user()->materias()->skip($offset)->take($limit)->get();
+
+    return response()->json($materias);
+}
+
     public function index()
     {
         $materias = Auth::user()->materias;

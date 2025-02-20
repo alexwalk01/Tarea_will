@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class JuegoController extends Controller
 {
+    public function cargarMasJuegos(Request $request)
+{
+    $offset = $request->input('offset', 0);
+    $limit = 3;
+
+    $juegos = Auth::user()->juegos()->skip($offset)->take($limit)->get();
+
+    return response()->json($juegos);
+}
+
     public function index()
     {
         $juegos = Auth::user()->juegos;
