@@ -16,38 +16,39 @@
             <!-- Barra de búsqueda -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
                 <div class="container-fluid">
-                    <form id="busquedaForm" class="d-flex ms-auto">
-                        <select id="categoriaSelect" name="categoria" class="form-select me-2">
-                            <option value="all">Todas</option>
-                            <option value="juegos">Juegos</option>
-                            <option value="materias">Materias</option>
-                            <option value="proyectos">Proyectos</option>
-                        </select>
-                        <input required type="text" id="nombreInput" name="nombre" placeholder="Buscar..." class="form-control me-2">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </form>
+                <form id="busquedaForm" class="d-flex ms-auto" action="{{ route('buscar.general') }}" method="GET">
+                    <select id="categoriaSelect" name="categoria" class="form-select me-2">
+                        <option value="all">Todas</option>
+                        <option value="juegos">Juegos</option>
+                        <option value="materias">Materias</option>
+                        <option value="proyectos">Proyectos</option>
+                    </select>
+                    <input required type="text" id="nombreInput" name="nombre" placeholder="Buscar..." class="form-control me-2">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
                 </div>
             </nav>
 
             <div class="container">
                 <h2>Materias disponibles</h2>
-                @if ($materias->isEmpty())
-                    <p>No tienes materias disponibles.</p>
-                @else
-                    <ul>
-                        @foreach ($materias as $materia)
-                            <li>
-                                <a href="{{ route('materia.descripcion', $materia->id) }}">
-                                    {{ $materia->nombre }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
+                <div id="contenedorMaterias" class="row">
+                    @foreach ($materias->take(3) as $materia)
+                        <div class="col-md-4 mb-3 materia-item">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{{ route('materia.descripcion', $materia->id) }}" class="text-decoration-none">{{ $materia->nombre }}</a>
+                                    </h5>
+                                    <p class="card-text">{{ $materia->descripcion ?? 'Sin descripción' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div id="cargando" style="display: none; text-align: center; margin: 20px 0;">
+                    <p>Cargando más materias...</p>
+                </div>
             </div>
-
-            <!-- Resultados de búsqueda -->
-            <div id="resultadosBusqueda" class="row mt-4"> </div>
         </main>
     </div>
 </div>
@@ -68,54 +69,52 @@
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById('busquedaForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+    let offset = 3; // Comienza después de las 3 primeras materias
+    let cargando = false; // Para evitar múltiples solicitudes simultáneas
 
-            const nombre = document.getElementById('nombreInput').value;
-            const categoria = document.getElementById('categoriaSelect').value;
+    function cargarMasMaterias() {
+        if (cargando) return;
+        cargando = true;
+        document.getElementById("cargando").style.display = "block";
 
-            fetch(`/buscar?nombre=${encodeURIComponent(nombre)}&categoria=${encodeURIComponent(categoria)}`)
-                .then(response => response.json())
-                .then(data => {
-                    const resultadosDiv = document.getElementById('resultadosBusqueda');
-                    resultadosDiv.innerHTML = ''; // Limpia resultados anteriores
-
-                    if (data.resultados && data.resultados.length > 0) {
-                        data.resultados.forEach(resultado => {
-                            const card = document.createElement('div');
-                            card.classList.add('col-md-4', 'mb-3');
-
-                            let link = "";
-                            if (resultado.modelo === "App\\Models\\Juego") {
-                                link = `/juego/${resultado.resultado.id}`;
-                            } else if (resultado.modelo === "App\\Models\\Materia") {
-                                link = `/materia/${resultado.resultado.id}`;
-                            } else if (resultado.modelo === "App\\Models\\Proyecto") {
-                                link = `/proyecto/${resultado.resultado.id}`;
-                            }
-
-                            card.innerHTML = `
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="${link}" class="text-decoration-none">${resultado.resultado.nombre}</a></h5>
-                                        <p class="card-text">${resultado.fragmento_descripcion}</p>
-                                    </div>
+        fetch(`/cargar-mas-materias?offset=${offset}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const contenedor = document.getElementById("contenedorMaterias");
+                    data.forEach(materia => {
+                        const card = document.createElement('div');
+                        card.classList.add('col-md-4', 'mb-3', 'materia-item');
+                        card.innerHTML = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="/materia/${materia.id}" class="text-decoration-none">${materia.nombre}</a>
+                                    </h5>
+                                    <p class="card-text">${materia.descripcion || 'Sin descripción'}</p>
                                 </div>
-                            `;
+                            </div>
+                        `;
+                        contenedor.appendChild(card);
+                    });
+                    offset += 3;
+                } else {
+                    window.removeEventListener('scroll', handleScroll);
+                }
+                cargando = false;
+                document.getElementById("cargando").style.display = "none";
+            })
+            .catch(error => console.error('Error al cargar más materias:', error));
+    }
 
-                            resultadosDiv.appendChild(card);
-                        });
-                    } else {
-                        resultadosDiv.innerHTML = '<p>No se encontraron resultados.</p>';
-                    }
+    function handleScroll() {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+            cargarMasMaterias();
+        }
+    }
 
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('resultadosBusqueda').innerHTML = `<p>Error en la búsqueda: ${error.message}</p>`;
-                });
-        });
-    });
+    window.addEventListener('scroll', handleScroll);
+});
 </script>
 @endsection
