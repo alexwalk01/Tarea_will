@@ -3,13 +3,12 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        @include('layouts._sidebar') <!-- Se incluye el menú -->
+        @include('layouts._sidebar') 
 
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
-
                 </ol>
             </nav>
 
@@ -28,84 +27,107 @@
                     </form>
                 </div>
             </nav>
-
             <div class="container">
-                <h2>Bienvenid@, {{ Auth::user()->name }}</h2>
-                <div>
-                <div class="carousel-wrapper">
-  <div id="carouselExample" class="carousel slide carousel-container" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <a href="{{ route('materia.index') }}">
-          <img src="{{ asset('images/imagen1.jpg') }}" class="d-block w-100" alt="Imagen 1">
-        </a>
-      </div>
-      <div class="carousel-item">
-        <a href="{{ route('juego.index') }}">
-          <img src="{{ asset('images/imagen2.jpg') }}" class="d-block w-100" alt="Imagen 2">
-        </a>
-      </div>
-      <div class="carousel-item">
-        <a href="{{ route('proyecto.index') }}">
-          <img src="{{ asset('images/imagen3.jpg') }}" class="d-block w-100" alt="Imagen 3">
-        </a>
-      </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
-  </div>
-</div>
+                <h2>Bienvenid@, {{ Auth::user()->name }}</h2>  
+                <div id="resultadosBusqueda" class="row mt-4"></div>
+                <!-- Carrusel -->
+            <div class="carousel-wrapper">
+                    <div id="carouselExample" class="carousel slide carousel-container" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="carousel-content">
+                                    <a href="{{ route('materia.index') }}" class="overlay">
+                                    <img src="{{ asset('images/imagen1.jpg') }}" class="d-block w-100" alt="Imagen 1">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="carousel-content">
+                                    <a href="{{ route('juego.index') }}" class="overlay">
+                                    <img src="{{ asset('images/imagen2.jpg') }}" class="d-block w-100" alt="Imagen 2">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="carousel-content">
+                                    <a href="{{ route('proyecto.index') }}" class="overlay">
+                                    <img src="{{ asset('images/imagen3.jpg') }}" class="d-block w-100" alt="Imagen 3">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 </div>
-                <div id="resultadosBusqueda" class="row mt-4"> </div>
             </div>
+            
         </main>
     </div>
 </div>
 
 <style>
-    .card {
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        padding: 15px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+    /* Contenedor del carrusel */
+    .carousel-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
 
-    .card-title a {
-        color: #333;
+    .carousel-container {
+        max-width: 400px;
+        max-height: 250px;
+        width: 100%;
+        position: relative;
+    }
+
+    .carousel-inner img {
+        max-height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    /* Contenedor para el overlay */
+    .carousel-content {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    /* Estilos del overlay */
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
         text-decoration: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: 10;
     }
 
-
-
-  /* Contenedor que centra el carrusel en la pantalla */
-  .carousel-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Asegura que el carrusel esté centrado verticalmente */
-  }
-
-  /* Tamaño reducido del carrusel */
-  .carousel-container {
-    max-width: 400px; /* Ancho del carrusel */
-    max-height: 250px; /* Altura máxima */
-    width: 100%;
-  }
-
-  /* Ajuste de imágenes dentro del carrusel */
-  .carousel-inner img {
-    max-height: 250px; /* Mantiene la altura máxima */
-    object-fit: contain; /* Evita que la imagen se deforme o recorte */
-  }
+    /* Mostrar el overlay al pasar el mouse */
+    .carousel-content:hover .overlay {
+        opacity: 1;
+    }
 </style>
 
+<!-- Script de Búsqueda -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('busquedaForm').addEventListener('submit', function(e) {
@@ -125,7 +147,7 @@
                     console.log('Resultados:', data.resultados);
 
                     const resultadosDiv = document.getElementById('resultadosBusqueda');
-                    resultadosDiv.innerHTML = ''; // Limpia resultados anteriores
+                    resultadosDiv.innerHTML = ''; // Limpiar resultados anteriores
 
                     if (data.resultados && data.resultados.length > 0) {
                         data.resultados.forEach(resultado => {
