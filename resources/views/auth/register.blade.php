@@ -58,7 +58,6 @@
                             <label for="security_question_1" class="col-md-4 col-form-label text-md-end">Pregunta de Seguridad 1</label>
                             <div class="col-md-6">
                                 <select id="security_question_1" class="form-control @error('security_question_1') is-invalid @enderror" name="security_question_1" required>
-                                    <option value="first_pet">¿Cuál es el nombre de su primera mascota?</option>
                                     <option value="favorite_movie">¿Cómo se llama su película favorita?</option>
                                 </select>
                                 @error('security_question_1')
@@ -86,7 +85,6 @@
                             <div class="col-md-6">
                                 <select id="security_question_2" class="form-control @error('security_question_2') is-invalid @enderror" name="security_question_2" required>
                                     <option value="first_pet">¿Cuál es el nombre de su primera mascota?</option>
-                                    <option value="favorite_movie">¿Cómo se llama su película favorita?</option>
                                 </select>
                                 @error('security_question_2')
                                     <span class="invalid-feedback" role="alert">
