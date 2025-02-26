@@ -15,7 +15,7 @@ Auth::routes();
 Route::get('/', function () {
     return redirect()->route('login');
 });
-
+// Cargar juegos
 Route::get('/cargar-mas-juegos', [JuegoController::class, 'cargarMasJuegos']);
 
 Route::get('/cargar-mas-materias', [MateriaController::class, 'cargarMasMaterias'])->name('materias.cargarMas');
