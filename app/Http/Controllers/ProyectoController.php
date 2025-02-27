@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class ProyectoController extends Controller
 {
+
+//todos los proyectos
+public function cargarTodosLosProyectos()
+{
+    $proyectos = Auth::user()->proyectos()->get();
+    return response()->json($proyectos);
+}
+
     public function index()
     {
         $proyectos = Auth::user()->proyectos;

@@ -16,6 +16,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+//todos los juegos
+Route::get('/cargar-todos-los-juegos', [JuegoController::class, 'cargarTodosLosJuegos']);
+Route::get('/cargar-todas-las-materias', [MateriaController::class, 'cargarTodasLasMaterias']);
+Route::get('/cargar-todos-los-proyectos', [ProyectoController::class, 'cargarTodosLosProyectos']);
+
 Route::get('/cargar-mas-juegos', [JuegoController::class, 'cargarMasJuegos']);
 
 Route::get('/cargar-mas-materias', [MateriaController::class, 'cargarMasMaterias'])->name('materias.cargarMas');

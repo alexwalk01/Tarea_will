@@ -28,108 +28,115 @@
                 </div>
             </nav>
             <div class="container">
-                <h2>Bienvenid@, {{ Auth::user()->name }}</h2>  
-                <div id="resultadosBusqueda" class="row mt-4"></div>
-                <!-- Carrusel -->
-            <div class="carousel-wrapper">
-                    <div id="carouselExample" class="carousel slide carousel-container" data-bs-ride="carousel">
+                <h2>Bienvenid@, {{ Auth::user()->name }}</h2> 
+                <div id="elementos">
+                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <div class="carousel-content">
-                                    <a href="{{ route('materia.index') }}" class="overlay">
-                                    <img src="{{ asset('images/imagen1.jpg') }}" class="d-block w-100" alt="Imagen 1">
-                                    </a>
-                                </div>
+                                <img id="img1" src="{{ asset('images/imagen1.jpg') }}" class="d-block w-100" alt="Imagen 1" title="Juegos">
+                                <p>Juegos</p>
                             </div>
                             <div class="carousel-item">
-                                <div class="carousel-content">
-                                    <a href="{{ route('juego.index') }}" class="overlay">
-                                    <img src="{{ asset('images/imagen2.jpg') }}" class="d-block w-100" alt="Imagen 2">
-                                    </a>
-                                </div>
+                                <img id="img2" src="{{ asset('images/imagen2.jpg') }}" class="d-block w-100" alt="Imagen 2" title="Materias">
+                                <p>Materias</p>
                             </div>
                             <div class="carousel-item">
-                                <div class="carousel-content">
-                                    <a href="{{ route('proyecto.index') }}" class="overlay">
-                                    <img src="{{ asset('images/imagen3.jpg') }}" class="d-block w-100" alt="Imagen 3">
-                                    </a>
-                                </div>
+                                <img id="img3" src="{{ asset('images/imagen3.jpg') }}" class="d-block w-100" alt="Imagen 3" title="Proyectos">
+                                <p>Proyectos</p>
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
                         </button>
                         <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
                         </button>
                     </div>
                 </div>
+                <div id="resultadosBusqueda" class="row mt-4"></div>
             </div>
-            
         </main>
     </div>
 </div>
 
 <style>
-    /* Contenedor del carrusel */
-    .carousel-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
 
-    .carousel-container {
-        max-width: 400px;
-        max-height: 250px;
-        width: 100%;
-        position: relative;
-    }
 
-    .carousel-inner img {
-        max-height: 250px;
-        object-fit: cover;
-        width: 100%;
-    }
-
-    /* Contenedor para el overlay */
-    .carousel-content {
-        position: relative;
-        display: inline-block;
-        width: 100%;
-    }
-
-    /* Estilos del overlay */
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        font-weight: bold;
-        text-decoration: none;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-        z-index: 10;
-    }
-
-    /* Mostrar el overlay al pasar el mouse */
-    .carousel-content:hover .overlay {
-        opacity: 1;
-    }
 </style>
 
 <!-- Script de Búsqueda -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+// Asignar eventos a las imágenes del carrusel
+document.getElementById('img1').addEventListener('click', () => cargarDatos('/cargar-todos-los-juegos'));
+        // Asignar eventos a las imágenes del carrusel
+        document.getElementById('img1').addEventListener('click', cargarJuegos);
+        document.getElementById('img2').addEventListener('click', cargarMaterias);
+        document.getElementById('img3').addEventListener('click', cargarProyectos);
+
+        function cargarJuegos() {
+            fetch('/cargar-todos-los-juegos')
+                .then(response => response.json())
+                .then(data => mostrarTarjetas(data))
+                .catch(error => console.error('Error cargando juegos:', error));
+        }
+
+        function cargarMaterias() {
+            fetch('/cargar-todas-las-materias')
+                .then(response => response.json())
+                .then(data => mostrarTarjetas(data))
+                .catch(error => console.error('Error cargando materias:', error));
+        }
+
+        function cargarProyectos() {
+            fetch('/cargar-todos-los-proyectos')
+                .then(response => response.json())
+                .then(data => mostrarTarjetas(data))
+                .catch(error => console.error('Error cargando proyectos:', error));
+        }
+
+
+        function mostrarTarjetas(datos) {
+        const elementosDiv = document.getElementById('elementos');
+        elementosDiv.innerHTML = ''; // Vaciar el contenedor
+
+        if (!datos || datos.length === 0) {
+            elementosDiv.innerHTML = `<p class="text-warning">No hay elementos disponibles.</p>`;
+            return;
+        }
+
+        const rowDiv = document.createElement('div');
+        rowDiv.classList.add('row');
+
+        datos.forEach(item => {
+            const colDiv = document.createElement('div');
+            colDiv.classList.add('col-md-4', 'mb-3');
+
+            let link = "";
+            if (item.modelo === "App\\Models\\Juego") {
+                link = `/juego/${item.id}`;
+            } else if (item.modelo === "App\\Models\\Materia") {
+                link = `/materia/${item.id}`;
+            } else if (item.modelo === "App\\Models\\Proyecto") {
+                link = `/proyecto/${item.id}`;
+            }
+
+            colDiv.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="${link}" class="text-decoration-none">${item.nombre}</a></h5>
+                        <p class="card-text">${item.descripcion}</p>
+                    </div>
+                </div>
+            `;
+            rowDiv.appendChild(colDiv);
+        });
+
+        elementosDiv.appendChild(rowDiv);
+    }
+
+
         document.getElementById('busquedaForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -185,5 +192,8 @@
                 });
         });
     });
+    
+
+
 </script>
 @endsection
