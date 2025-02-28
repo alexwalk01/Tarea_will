@@ -29,7 +29,7 @@
 
                     </ul>
 
-                    @if (!request()->is('login'))  {{-- Condición para ocultar el buscador en la ruta de login --}}
+                    @if (!request()->is('login') && !request()->is('register') && !request()->is('password/reset') && !request()->is('password/email'))
                         <form action="{{ route('buscar.general') }}" method="GET" class="d-flex" style="margin-left: auto; margin-right: 200px; gap: 5px; align-items: center; font-size: 12px;">
                             <input required type="text" name="nombre" placeholder="Búsqueda general..." value="{{ request('nombre') }}" style="padding: 3px; font-size: 12px;">
                             <button type="submit" style="padding: 3px 8px; font-size: 12px; cursor: pointer;">Buscar</button>
