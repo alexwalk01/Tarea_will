@@ -8,6 +8,7 @@ use App\Http\Controllers\ProyectoController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BusquedaController;
+use App\Http\Controllers\SmsController;
 
 Auth::routes();
 
@@ -55,3 +56,14 @@ Route::prefix('admin')->middleware('auth')->group(function() {
     Route::resource('proyectos', ProyectoController::class);
 });
 
+Route::get('/sms/form', [SmsController::class, 'index'])->name('sms.form');
+Route::post('/sms/send', [SmsController::class, 'sendSms'])->name('sms.send');
+Route::get('/sms/verify', [SmsController::class, 'showVerificationForm'])->name('sms.verify'); // Asegúrate de que sea un GET
+Route::post('/sms/verify', [SmsController::class, 'verifyCode'])->name('sms.verify.code'); // Cambia el nombre para diferenciar
+
+Route::get('/password/recovery', function () {
+    return view('auth.password_recovery');
+})->name('password.recovery');
+
+Route::post('/password/update', [App\Http\Controllers\Auth\ResetPasswordController::class, 'updatePassword'])
+    ->name('password.update');
