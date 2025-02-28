@@ -19,6 +19,15 @@ class JuegoController extends Controller
     return response()->json($juegos);
 }
 
+
+//todos los juegos
+public function cargarTodosLosJuegos()
+{
+    $juegos = Auth::user()->juegos()->get();
+    return response()->json($juegos);
+}
+
+
     public function index()
     {
         $juegos = Auth::user()->juegos;

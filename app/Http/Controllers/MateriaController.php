@@ -19,6 +19,14 @@ class MateriaController extends Controller
     return response()->json($materias);
 }
 
+
+//todas las materias
+public function cargarTodasLasMaterias()
+{
+    $materias = Auth::user()->materias()->get();
+    return response()->json($materias);
+}
+
     public function index()
     {
         $materias = Auth::user()->materias;
