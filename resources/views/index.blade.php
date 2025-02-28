@@ -60,21 +60,30 @@
 </div>
 
 <style>
+    .card {
+        border: 1px solid #eee;
+        margin-bottom: 20px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
 
-
+    .card-title a {
+        color: #333;
+        text-decoration: none;
+    }
 </style>
 
 <!-- Script de Búsqueda -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-// Asignar eventos a las imágenes del carrusel
-document.getElementById('img1').addEventListener('click', () => cargarDatos('/cargar-todos-los-juegos'));
         // Asignar eventos a las imágenes del carrusel
         document.getElementById('img1').addEventListener('click', cargarJuegos);
         document.getElementById('img2').addEventListener('click', cargarMaterias);
         document.getElementById('img3').addEventListener('click', cargarProyectos);
-
+        
+        //traer todas los uegos
         function cargarJuegos() {
             fetch('/cargar-todos-los-juegos')
                 .then(response => response.json())
@@ -82,22 +91,25 @@ document.getElementById('img1').addEventListener('click', () => cargarDatos('/ca
                 .catch(error => console.error('Error cargando juegos:', error));
         }
 
+        //traer todas las materias
         function cargarMaterias() {
             fetch('/cargar-todas-las-materias')
-                .then(response => response.json())
-                .then(data => mostrarTarjetas(data))
-                .catch(error => console.error('Error cargando materias:', error));
+            .then(response => response.json())
+            .then(data => mostrarTarjetas(data))
+            .catch(error => console.error('Error cargando materias:', error));
         }
-
+        
+        //traer todas los proyectos
         function cargarProyectos() {
             fetch('/cargar-todos-los-proyectos')
                 .then(response => response.json())
                 .then(data => mostrarTarjetas(data))
                 .catch(error => console.error('Error cargando proyectos:', error));
-        }
-
-
-        function mostrarTarjetas(datos) {
+            }
+            
+         
+    //Pintar las tarjetas con lo que trae el carrusel        
+    function mostrarTarjetas(datos) {
         const elementosDiv = document.getElementById('elementos');
         elementosDiv.innerHTML = ''; // Vaciar el contenedor
 
@@ -137,7 +149,8 @@ document.getElementById('img1').addEventListener('click', () => cargarDatos('/ca
     }
 
 
-        document.getElementById('busquedaForm').addEventListener('submit', function(e) {
+    //Busqueda
+    document.getElementById('busquedaForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const nombre = document.getElementById('nombreInput').value;
