@@ -34,19 +34,19 @@
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn" style="background-color: #00aae4; color: white;">
                                     {{ __('Enviar Enlace de Restablecimiento') }}
                                 </button>
                             </div>
                         </div>
 
                         <div class="row mt-3">
-                        <div class="col-md-6 offset-md-4">
-                            <a href="{{ route('sms.form') }}" class="btn btn-primary">
-                                {{ __('Recuperar por SMS') }}
-                            </a>
+                            <div class="col-md-6 offset-md-4">
+                                <a href="{{ route('sms.form') }}" class="btn" style="background-color: #00aae4; color: white;">
+                                    {{ __('Recuperar por SMS') }}
+                                </a>
+                            </div>
                         </div>
-                    </div>
                     
                     </form>
                 </div>
