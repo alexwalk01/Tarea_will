@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 Auth::routes();
-
+//hola
 // Ruta principal, redirige al login si no está autenticado
 Route::get('/', function () {
     return redirect()->route('login');
