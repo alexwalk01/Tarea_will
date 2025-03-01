@@ -37,7 +37,11 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'remember_token'
+        'remember_token',
+        'security_question_1',
+        'security_answer_1',
+        'security_question_2',
+        'security_answer_2'
     ];
 
     /**

@@ -26,6 +26,10 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'phone' => ['required', 'numeric', 'digits:10'],
+            'security_question_1' => ['required', 'in:first_pet,favorite_movie'], // Validar que sea una de las opciones
+            'security_answer_1' => ['required', 'string', 'max:255'],
+            'security_question_2' => ['required', 'in:first_pet,favorite_movie'], // Validar que sea una de las opciones
+            'security_answer_2' => ['required', 'string', 'max:255'],
         ]);
     }
 
@@ -36,6 +40,10 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'],
+            'security_question_1' => $data['security_question_1'],
+            'security_answer_1' => $data['security_answer_1'],
+            'security_question_2' => $data['security_question_2'],
+            'security_answer_2' => $data['security_answer_2'],
         ]);
     }
 }
