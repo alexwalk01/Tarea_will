@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SmsController;
 
 Auth::routes();
-
+//hola
 // Ruta principal, redirige al login si no está autenticado
 Route::get('/', function () {
     return redirect()->route('login');
