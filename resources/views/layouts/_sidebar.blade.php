@@ -8,7 +8,6 @@
     <div class="collapse d-md-block" id="sidebarMenu">
         <ul class="nav flex-column">
 
-
             <!-- Juegos -->
             <li class="nav-item">
                 <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseJuegos" role="button">

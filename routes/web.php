@@ -17,6 +17,11 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+//Ruta publica 
+Route::get('/publico', function(){
+    return "publio";
+});
+
 //todos los juegos
 Route::get('/cargar-todos-los-juegos', [JuegoController::class, 'cargarTodosLosJuegos']);
 Route::get('/cargar-todas-las-materias', [MateriaController::class, 'cargarTodasLasMaterias']);
