@@ -47,6 +47,15 @@
                                 </a>
                             </div>
                         </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 offset-md-4">
+                                <a href="{{ route('security.form') }}" class="btn btn-primary">
+                                    {{ __('Recuperar por Preguntas de Seguridad') }}
+                                </a>
+                            </div>
+                        </div>
+
                     
                     </form>
                 </div>

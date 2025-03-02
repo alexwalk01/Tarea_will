@@ -9,6 +9,7 @@ use App\Http\Controllers\BusquedaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SmsController;
+use App\Http\Controllers\Auth\SecurityController;
 
 Auth::routes();
 //hola
@@ -66,6 +67,10 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/juego/{id}/descripcion', [JuegoController::class, 'descripcion'])->name('juego.descripcion');
 Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
 Route::get('/materia/{id}/descripcion', [MateriaController::class, 'descripcion'])->name('materia.descripcion');
+
+Route::get('/password/security', [SecurityController::class, 'showForm'])->name('security.form');
+Route::post('/password/security', [SecurityController::class, 'verifyAnswers'])->name('security.verify');
+Route::post('/password/security/update', [SecurityController::class, 'updatePassword'])->name('security.update');
 
 Route::prefix('admin')->middleware('auth')->group(function() {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
