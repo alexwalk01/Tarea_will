@@ -25,7 +25,7 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav me-auto"></ul>
 
                     </ul>
 
@@ -35,7 +35,6 @@
                             <button type="submit" style="padding: 3px 8px; font-size: 12px; cursor: pointer;">Buscar</button>
                         </form>
                     @endif
-
 
                     <ul class="navbar-nav ms-auto">
                         @guest

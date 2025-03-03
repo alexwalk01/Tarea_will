@@ -8,6 +8,8 @@ use App\Http\Controllers\ProyectoController;
 use App\Http\Controllers\BusquedaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\SmsController;
+use App\Http\Controllers\Auth\SecurityController;
 
 Auth::routes();
 //hola
@@ -60,3 +62,31 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/cargar-mas-materias', [MateriaController::class, 'cargarMasMaterias'])->name('materias.cargarMas');
     Route::get('/buscar', [BusquedaController::class, 'buscar'])->name('buscar.general');
 });
+
+// Ruta para descripción de materia, juegos y proyectos
+Route::get('/juego/{id}/descripcion', [JuegoController::class, 'descripcion'])->name('juego.descripcion');
+Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
+Route::get('/materia/{id}/descripcion', [MateriaController::class, 'descripcion'])->name('materia.descripcion');
+
+Route::get('/password/security', [SecurityController::class, 'showForm'])->name('security.form');
+Route::post('/password/security', [SecurityController::class, 'verifyAnswers'])->name('security.verify');
+Route::post('/password/security/update', [SecurityController::class, 'updatePassword'])->name('security.update');
+
+Route::prefix('admin')->middleware('auth')->group(function() {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+    Route::resource('juegos', JuegoController::class);
+    Route::resource('materias', MateriaController::class);
+    Route::resource('proyectos', ProyectoController::class);
+});
+
+Route::get('/sms/form', [SmsController::class, 'index'])->name('sms.form');
+Route::post('/sms/send', [SmsController::class, 'sendSms'])->name('sms.send');
+Route::get('/sms/verify', [SmsController::class, 'showVerificationForm'])->name('sms.verify'); // Asegúrate de que sea un GET
+Route::post('/sms/verify', [SmsController::class, 'verifyCode'])->name('sms.verify.code'); // Cambia el nombre para diferenciar
+
+Route::get('/password/recovery', function () {
+    return view('auth.password_recovery');
+})->name('password.recovery');
+
+Route::post('/password/update', [App\Http\Controllers\Auth\ResetPasswordController::class, 'updatePassword'])
+    ->name('password.update');
