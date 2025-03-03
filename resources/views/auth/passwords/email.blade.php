@@ -4,8 +4,10 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Restablecer Contraseña') }}</div>
+            <div class="card shadow-lg">
+                <div class="card-header text-center font-weight-bold" style="background-color: #343a40; color: white;">
+                        {{ __('🔄 Restablecer Contraseña') }}
+                </div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -34,26 +36,27 @@
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn" style="background-color: #00aae4; color: white;">
                                     {{ __('Enviar Enlace de Restablecimiento') }}
                                 </button>
                             </div>
                         </div>
 
                         <div class="row mt-3">
-                        <div class="col-md-6 offset-md-4">
-                            <a href="{{ route('sms.form') }}" class="btn btn-primary">
-                                {{ __('Recuperar por SMS') }}
-                            </a>
+                            <div class="col-md-6 offset-md-4">
+                                <a href="{{ route('sms.form') }}" class="btn" style="background-color: #ff5722; color: white;">
+                                    {{ __('Recuperar por SMS') }}
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-    <div class="col-md-6 offset-md-4">
-        <a href="{{ route('security.form') }}" class="btn btn-primary">
-            {{ __('Recuperar por Preguntas de Seguridad') }}
-        </a>
-    </div>
-</div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 offset-md-4">
+                                <a href="{{ route('security.form') }}" class="btn" style="background-color: #ff5722; color: white;">
+                                    {{ __('Recuperar por Preguntas de Seguridad') }}
+                                </a>
+                            </div>
+                        </div>
 
                     
                     </form>
