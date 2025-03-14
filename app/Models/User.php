@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-     /** @use HasFactory<\Database\Factories\UserFactory> */
-     use HasFactory, Notifiable;
+    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasFactory, Notifiable;
     public function juegos()
     {
         return $this->hasMany(Juego::class);
@@ -41,7 +42,9 @@ class User extends Authenticatable
         'security_question_1',
         'security_answer_1',
         'security_question_2',
-        'security_answer_2'
+        'security_answer_2',
+        'token_expiration',
+
     ];
 
     /**
@@ -66,4 +69,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+/**
+     * Obtener el identificador único de JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();  // Retorna el identificador único del usuario (id_usuario)
+    }
+
+    /**
+     * Obtener los "claims" personalizados para el JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];  // Puedes añadir claims personalizados si es necesario
+    }
+
 }
