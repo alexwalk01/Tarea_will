@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\Auth\SecurityController;
 
-use App\Http\Controllers\Auth\LoginController;
-
 Auth::routes();
 //hola
 // Ruta principal, redirige al login si no está autenticado
@@ -92,6 +90,3 @@ Route::get('/password/recovery', function () {
 
 Route::post('/password/update', [App\Http\Controllers\Auth\ResetPasswordController::class, 'updatePassword'])
     ->name('password.update');
-
-
-Route::get('/confirm-login/{token}', [LoginController::class, 'confirmLogin'])->name('confirm.login');
