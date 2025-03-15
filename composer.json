@@ -7,9 +7,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "firebase/php-jwt": "6.0",
         "laravel/framework": "^11.31",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.6",
+        "nesbot/carbon": "^3.8",
         "twilio/sdk": "^8.3",
         "tymon/jwt-auth": "^2.2"
     },
