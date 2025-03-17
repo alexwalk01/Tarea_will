@@ -70,6 +70,9 @@ Route::post('/sms/send', [SmsController::class, 'sendSms'])->name('sms.send');
 Route::get('/sms/verify', [SmsController::class, 'showVerificationForm'])->name('sms.verify');
 Route::post('/sms/verify-code', [SmsController::class, 'verifyCode'])->name('sms.verify_code');
 
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::get('/verify/{verificationCode}', [App\Http\Controllers\Auth\LoginController::class, 'verify'])->name('verify.email');
+
 // Ruta para recuperación de contraseña
 Route::get('/password/recovery', function () {
     return view('auth.password_recovery');
