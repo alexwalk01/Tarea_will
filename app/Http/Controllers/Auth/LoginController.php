@@ -8,9 +8,11 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Models\Usuario;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -28,27 +30,60 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Iniciar sesión, generar token único por usuario y guardarlo en la base de datos.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         try {
-            if (!$token = JWTAuth::attempt($credentials)) {
+            if (!$user = User::where('email', $credentials['email'])->first()) {
                 return response()->json(['error' => 'No autorizado'], 401);
             }
 
-            // Obtener usuario autenticado con JWT
-            $user = JWTAuth::user();
+            if (!Hash::check($credentials['password'], $user->password)) {
+                return response()->json(['error' => 'No autorizado'], 401);
+            }
 
-            // Verificar que el usuario fue autenticado correctamente
-            if (!$user) {
-                return response()->json(['error' => 'Usuario no encontrado'], 404);
+            // Generar código de verificación
+            $verificationCode = Str::random(60);
+            $user->verification_code = $verificationCode;
+            $user->verification_expires_at = Carbon::now()->addMinutes(2);
+            $user->save();
+
+            // Enviar correo electrónico de verificación
+            Mail::send('emails.verify', ['user' => $user, 'verificationCode' => $verificationCode], function ($message) use ($user) {
+                $message->to($user->email);
+                $message->subject('Confirmación de inicio de sesión');
+            });
+
+            return view('verification_sent');
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error interno del servidor'], 500);
+        }
+    }
+
+    public function verify(Request $request, $verificationCode)
+    {
+        $user = User::where('verification_code', $verificationCode)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'Código de verificación inválido'], 400);
+        }
+
+        if (Carbon::now()->greaterThan($user->verification_expires_at)) {
+            $user->verification_code = null;
+            $user->verification_expires_at = null;
+            $user->save();
+            return response()->json(['error' => 'Código de verificación expirado'], 400);
+        }
+
+        $user->verification_code = null;
+        $user->verification_expires_at = null;
+        $user->save();
+
+        try {
+            if (!$token = JWTAuth::fromUser($user)) {
+                return response()->json(['error' => 'No autorizado'], 401);
             }
 
             // Guardar el token y su fecha de expiración en la base de datos
@@ -59,25 +94,13 @@ class LoginController extends Controller
             // Autenticar usuario con Auth para manejar sesiones
             Auth::login($user);
 
-            // Verificar si la solicitud es JSON (API) o desde el navegador
-            if ($request->expectsJson()) {
-                return $this->respondWithToken($token);
-            }
-
-            // Redirigir al home si la solicitud proviene del navegador
-            return redirect()->intended('/home');
+            return $this->respondWithToken($token);
 
         } catch (JWTException $e) {
             return response()->json(['error' => 'No se pudo crear el token'], 500);
         }
     }
 
-    /**
-     * Responder con el token JWT.
-     *
-     * @param string $token
-     * @return \Illuminate\Http\JsonResponse
-     */
     protected function respondWithToken($token)
     {
         return response()->json([
@@ -87,33 +110,6 @@ class LoginController extends Controller
         ]);
     }
 
-    /**
-     * Verificar el estado de la sesión y cerrar sesión si el token ha expirado.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function checkSession(Request $request)
-    {
-        $user = Auth::user();
-
-        if ($user) {
-            // Verificar si el token ha expirado
-            if (Carbon::now()->greaterThan($user->token_expires_at)) {
-                Auth::logout(); // Cerrar sesión
-                return response()->json(['error' => 'Sesión expirada'], 401);
-            }
-            return response()->json(['message' => 'Sesión activa']);
-        }
-
-        return response()->json(['error' => 'Usuario no autenticado'], 401);
-    }
-
-    /**
-     * Cerrar sesión.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function logout(Request $request)
     {
         Auth::logout();
