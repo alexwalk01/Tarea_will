@@ -62,44 +62,55 @@ class LoginController extends Controller
         }
     }
 
-    public function verify(Request $request, $verificationCode)
-    {
-        $user = User::where('verification_code', $verificationCode)->first();
 
-        if (!$user) {
-            return response()->json(['error' => 'Código de verificación inválido'], 400);
-        }
+public function verify(Request $request, $verificationCode)
+{
+    // Buscar al usuario por el código de verificación
+    $user = User::where('verification_code', $verificationCode)->first();
 
-        if (Carbon::now()->greaterThan($user->verification_expires_at)) {
-            $user->verification_code = null;
-            $user->verification_expires_at = null;
-            $user->save();
-            return response()->json(['error' => 'Código de verificación expirado'], 400);
-        }
+    // Si el usuario no existe, redirigir al login con un mensaje de error
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'El código de verificación es inválido o ha caducado.');
+    }
 
+    // Verificar si el código de verificación ha expirado
+    if (Carbon::now()->greaterThan($user->verification_expires_at)) {
+        // Limpiar el código de verificación y la fecha de expiración
         $user->verification_code = null;
         $user->verification_expires_at = null;
         $user->save();
-
-        try {
-            if (!$token = JWTAuth::fromUser($user)) {
-                return response()->json(['error' => 'No autorizado'], 401);
-            }
-
-            // Guardar el token y su fecha de expiración en la base de datos
-            $user->remember_token = Hash::make($token);
-            $user->token_expiration = Carbon::now()->addMinutes(3);
-            $user->save();
-
-            // Autenticar usuario con Auth para manejar sesiones
-            Auth::login($user);
-
-            return $this->respondWithToken($token);
-
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'No se pudo crear el token'], 500);
-        }
+        // Redirigir al login con un mensaje de error
+        return redirect()->route('login')->with('error', 'El código de verificación ha expirado. Intenta de nuevo.');
     }
+
+    // Limpiar el código de verificación y la fecha de expiración
+    $user->verification_code = null;
+    $user->verification_expires_at = null;
+    $user->save();
+
+    try {
+        // Generar un token JWT para el usuario
+        if (!$token = JWTAuth::fromUser($user)) {
+            // Si no se puede generar el token, devolver un error de no autorizado
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        // Guardar el token y su fecha de expiración en la base de datos
+        $user->remember_token = Hash::make($token);
+        $user->token_expiration = Carbon::now()->addMinutes(3);
+        $user->save();
+
+        // Autenticar al usuario con Auth para manejar sesiones
+        Auth::login($user);
+
+        // Redirigir al usuario a la página principal (ajusta 'home' según tu ruta)
+        return redirect()->route('home');
+
+    } catch (JWTException $e) {
+        // Si ocurre un error al generar el token, devolver un error interno del servidor
+        return response()->json(['error' => 'No se pudo crear el token'], 500);
+    }
+}
 
     protected function respondWithToken($token)
     {
@@ -109,6 +120,7 @@ class LoginController extends Controller
             'expires_in' => 180, // 3 minutos en segundos
         ]);
     }
+
 
     public function logout(Request $request)
     {

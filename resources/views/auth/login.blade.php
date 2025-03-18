@@ -8,6 +8,16 @@
 @section('content')
 <div class="container d-flex align-items-center justify-content-center vh-100" >
     <div class="card shadow-lg p-4" style="max-width: 380px; width: 100%; border-radius: 20px; overflow: hidden; background: #ffffff;">
+        
+            <div>
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+            </div>
+            
         <div class="text-center mb-4">
             <h3 class="fw-bold text-primary">{{ __('Bienvenido') }}</h3>
             <p class="text-muted">{{ __('Inicia sesión para continuar') }}</p>
