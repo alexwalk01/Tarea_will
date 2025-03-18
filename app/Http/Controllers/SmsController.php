@@ -101,7 +101,7 @@ class SmsController extends Controller
         }
     
         // **Verificar si el código ha expirado (ejemplo: 10 minutos de validez)**
-        $codigoExpirado = now()->diffInMinutes($tokenEntry->created_at) > 10;
+        $codigoExpirado = now()->diffInMinutes($tokenEntry->created_at) > 5;
     
         if ($codigoExpirado) {
             DB::table('password_reset_tokens')->where('phone', $request->phone)->delete();

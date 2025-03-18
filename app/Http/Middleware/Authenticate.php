@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Authenticate
 {
@@ -15,11 +16,12 @@ class Authenticate
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
-        // Si el usuario no está autenticado, lanza un error 403
-        if (Auth::guest()) {
-            abort(403);
+        try {
+            JWTAuth::parseToken()->authenticate();
+        } catch (\Exception $e) {
+            return redirect()->route('login');
         }
 
         return $next($request);

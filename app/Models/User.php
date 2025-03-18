@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-     /** @use HasFactory<\Database\Factories\UserFactory> */
-     use HasFactory, Notifiable;
+    use HasFactory, Notifiable;
+
     public function juegos()
     {
         return $this->hasMany(Juego::class);
@@ -26,12 +26,6 @@ class User extends Authenticatable
         return $this->hasMany(Proyecto::class);
     }
 
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -41,29 +35,34 @@ class User extends Authenticatable
         'security_question_1',
         'security_answer_1',
         'security_question_2',
-        'security_answer_2'
+        'security_answer_2',
+        'token_expiration',
+        'verification_code', // Agregar verification_code
+        'verification_expires_at', // Agregar verification_expires_at
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'verification_expires_at' => 'datetime', // Agregar verification_expires_at
+            'token_expiration' => 'datetime', // agregar token_expiration
         ];
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }
