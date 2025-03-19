@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\SessionTerminated;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -56,61 +58,36 @@ class LoginController extends Controller
             });
 
             return view('verification_sent');
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error interno del servidor'], 500);
         }
     }
 
+    public function authenticated(Request $request, $user)
+    {
+        $currentSessionId = session()->getId();
 
-public function verify(Request $request, $verificationCode)
-{
-    // Buscar al usuario por el código de verificación
-    $user = User::where('verification_code', $verificationCode)->first();
-
-    // Si el usuario no existe, redirigir al login con un mensaje de error
-    if (!$user) {
-        return redirect()->route('login')->with('error', 'El código de verificación es inválido o ha caducado.');
-    }
-
-    // Verificar si el código de verificación ha expirado
-    if (Carbon::now()->greaterThan($user->verification_expires_at)) {
-        // Limpiar el código de verificación y la fecha de expiración
-        $user->verification_code = null;
-        $user->verification_expires_at = null;
-        $user->save();
-        // Redirigir al login con un mensaje de error
-        return redirect()->route('login')->with('error', 'El código de verificación ha expirado. Intenta de nuevo.');
-    }
-
-    // Limpiar el código de verificación y la fecha de expiración
-    $user->verification_code = null;
-    $user->verification_expires_at = null;
-    $user->save();
-
-    try {
-        // Generar un token JWT para el usuario
-        if (!$token = JWTAuth::fromUser($user)) {
-            // Si no se puede generar el token, devolver un error de no autorizado
-            return response()->json(['error' => 'No autorizado'], 401);
+        if ($user->session_id && $user->session_id !== $currentSessionId) {
+            event(new SessionTerminated($user->id));
+            DB::table('sessions')->where('id', $user->session_id)->delete();
         }
 
-        // Guardar el token y su fecha de expiración en la base de datos
-        $user->remember_token = Hash::make($token);
-        $user->token_expiration = Carbon::now()->addMinutes(3);
+        $user->session_id = $currentSessionId;
         $user->save();
-
-        // Autenticar al usuario con Auth para manejar sesiones
-        Auth::login($user);
-
-        // Redirigir al usuario a la página principal (ajusta 'home' según tu ruta)
-        return redirect()->route('home');
-
-    } catch (JWTException $e) {
-        // Si ocurre un error al generar el token, devolver un error interno del servidor
-        return response()->json(['error' => 'No se pudo crear el token'], 500);
     }
-}
+
+    public function logout(Request $request)
+    {
+        if($request->has('duplicate_session')){
+            $user = Auth::user();
+            event(new SessionTerminated($user->id));
+            Auth::logout();
+            return redirect('/login')->with('message', 'Tu sesión ha sido cerrada porque se inició sesión en otro dispositivo.');
+        }
+
+        Auth::logout();
+        return redirect('/login')->with('message', 'Sesión cerrada correctamente');
+    }
 
     protected function respondWithToken($token)
     {
@@ -121,10 +98,61 @@ public function verify(Request $request, $verificationCode)
         ]);
     }
 
-
-    public function logout(Request $request)
+    public function verify(Request $request, $verificationCode)
     {
-        Auth::logout();
-        return redirect('/login')->with('message', 'Sesión cerrada correctamente');
+        $user = User::where('verification_code', $verificationCode)->first();
+
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'El código de verificación es inválido o ha caducado.');
+        }
+
+        if (Carbon::now()->greaterThan($user->verification_expires_at)) {
+            $user->verification_code = null;
+            $user->verification_expires_at = null;
+            $user->save();
+            return redirect()->route('login')->with('error', 'El código de verificación ha expirado. Intenta de nuevo.');
+        }
+
+        $user->verification_code = null;
+        $user->verification_expires_at = null;
+        $user->save();
+
+        try {
+            // Verificar y eliminar sesión anterior si existe
+            DB::table('sessions')->where('user_id', $user->id)->delete();
+
+            if (!$token = JWTAuth::fromUser($user)) {
+                return response()->json(['error' => 'No autorizado'], 401);
+            }
+
+            $user->remember_token = Hash::make($token);
+            $user->token_expiration = Carbon::now()->addMinutes(3);
+            $user->save();
+
+            Auth::login($user);
+
+            return redirect()->route('home');
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'No se pudo crear el token'], 500);
+        }
     }
+
+    // public function authenticated(Request $request, $user)
+    // {
+    //     $currentSessionId = session()->getId();
+
+    //     // Si el usuario ya tiene una sesión activa en otro dispositivo
+    //     if ($user->session_id && $user->session_id !== $currentSessionId) {
+    //         // Notificar al dispositivo antiguo (puedes crear un evento para esto si lo deseas)
+    //         // Cerrar la sesión en el dispositivo antiguo
+    //         \DB::table('sessions')->where('id', $user->session_id)->delete();
+
+    //         // Aquí guardamos el mensaje para que se muestre en el siguiente request
+    //         session()->flash('message', 'Tu sesión ha sido cerrada porque se inició sesión en otro dispositivo.');
+    //     }
+
+    //     // Actualizar el session_id del usuario
+    //     $user->session_id = $currentSessionId;
+    //     $user->save();
+    // }
 }

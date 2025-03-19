@@ -11,6 +11,7 @@ use App\Http\Controllers\SmsController;
 use App\Http\Controllers\Auth\SecurityController;
 use App\Http\Middleware\CheckTokenExpiration;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
@@ -85,3 +86,8 @@ Route::post('/password/update', [App\Http\Controllers\Auth\ResetPasswordControll
 Route::get('/token-expired', function () {
     return view('auth.login');
 })->name('token.expired');
+
+
+Broadcast::channel('user.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
