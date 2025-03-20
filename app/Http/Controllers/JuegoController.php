@@ -107,4 +107,12 @@ class JuegoController extends Controller
 
         return view('juego.index', compact('juegos'));
     }
+
+    public function destroy($id)
+    {
+        $juego = Juego::findOrFail($id);
+        $juego->delete();
+
+        return redirect()->route('juegos.index')->with('success', 'Juego eliminada correctamente.');
+    }
 }
