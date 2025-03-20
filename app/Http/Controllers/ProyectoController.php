@@ -99,4 +99,5 @@ class ProyectoController extends Controller
         $proyectos = Proyecto::where('nombre', 'like', '%' . $nombre . '%')->get();
         return view('proyecto.index', compact('proyectos'));
     }
+
 }
