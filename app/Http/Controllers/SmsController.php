@@ -54,7 +54,7 @@ class SmsController extends Controller
             DB::table('password_reset_tokens')->insert([
                 'email' => $user->email,
                 'token' => bcrypt($verificationCode), // Se recomienda cifrar el token por seguridad.
-                //'phone' => $request->phone,
+                'phone' => $request->phone,
                 'created_at' => now()
             ]);
     
