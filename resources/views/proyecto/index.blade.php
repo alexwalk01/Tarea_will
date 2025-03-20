@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        @include('layouts._sidebar') <!-- Se incluye el menú -->
+        @include('layouts._sidebar') <!-- Incluir el sidebar -->
 
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">
@@ -13,117 +13,38 @@
                 </ol>
             </nav>
 
-            <!-- Barra de búsqueda -->
-            <nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
-                <div class="container-fluid">
-                    <form id="busquedaForm" class="d-flex ms-auto">
-                        <select id="categoriaSelect" name="categoria" class="form-select me-2">
-                            <option value="all">Todas</option>
-                            <option value="juegos">Juegos</option>
-                            <option value="materias">Materias</option>
-                            <option value="proyectos">Proyectos</option>
-                        </select>
-                        <input required type="text" id="nombreInput" name="nombre" placeholder="Buscar..." class="form-control me-2">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </form>
-                </div>
-            </nav>
+            <!-- Botón para agregar proyectos (solo si el usuario tiene permiso) -->
+            @if(in_array('create', json_decode(auth()->user()->proyectos_permissions, true) ?? []))
+                <a href="{{ route('proyectos.create') }}" class="btn btn-success mb-3">Agregar Proyecto</a>
+            @endif
 
-            <!-- Contenido principal -->
-            <div class="container">
-                <h2>Proyectos disponibles</h2>
-                @if ($proyectos->isEmpty())
-                    <p>No tienes proyectos disponibles.</p>
-                @else
-                    <ul>
-                        @foreach ($proyectos as $proyecto)
-                            <li>
-                                <a href="{{ route('proyecto.show', $proyecto->id) }}">
-                                    {{ $proyecto->nombre }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
+            <div class="row">
+                @foreach($proyectos as $proyecto)
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="{{ route('proyecto.descripcion', $proyecto->id) }}" class="text-decoration-none">{{ $proyecto->nombre }}</a>
+                                </h5>
+                                <p class="card-text">{{ $proyecto->descripcion ?? 'Sin descripción' }}</p>
+
+                                <!-- Botones de Editar y Eliminar -->
+                                @if(in_array('update', json_decode(auth()->user()->proyectos_permissions, true) ?? []))
+                                    <a href="{{ route('proyectos.edit', $proyecto->id) }}" class="btn btn-warning btn-sm">Editar</a>
+                                @endif
+                                @if(in_array('delete', json_decode(auth()->user()->proyectos_permissions, true) ?? []))
+                                    <form action="{{ route('proyectos.destroy', $proyecto->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-
-            <!-- Resultados de búsqueda -->
-            <div id="resultadosBusqueda" class="row mt-4"> </div>
         </main>
     </div>
 </div>
-
-<style>
-    .card {
-        border: 1px solid #eee;
-        margin-bottom: 20px;
-        padding: 15px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-    }
-
-    .card-title a {
-        color: #333;
-        text-decoration: none;
-    }
-</style>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById('busquedaForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const nombre = document.getElementById('nombreInput').value;
-            const categoria = document.getElementById('categoriaSelect').value;
-
-            fetch(`/buscar?nombre=${encodeURIComponent(nombre)}&categoria=${encodeURIComponent(categoria)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Resultados:', data.resultados);
-
-                    const resultadosDiv = document.getElementById('resultadosBusqueda');
-                    resultadosDiv.innerHTML = ''; // Limpia resultados anteriores
-
-                    if (data.resultados && data.resultados.length > 0) {
-                        data.resultados.forEach(resultado => {
-                            const card = document.createElement('div');
-                            card.classList.add('col-md-4', 'mb-3');
-
-                            let link = "";
-                            if (resultado.modelo === "App\\Models\\Juego") {
-                                link = `/juego/${resultado.resultado.id}`;
-                            } else if (resultado.modelo === "App\\Models\\Materia") {
-                                link = `/materia/${resultado.resultado.id}`;
-                            } else if (resultado.modelo === "App\\Models\\Proyecto") {
-                                link = `/proyecto/${resultado.resultado.id}`;
-                            }
-
-                            card.innerHTML = `
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><a href="${link}" class="text-decoration-none">${resultado.resultado.nombre}</a></h5>
-                                        <p class="card-text">${resultado.fragmento_descripcion}</p>
-                                    </div>
-                                </div>
-                            `;
-
-                            resultadosDiv.appendChild(card);
-                        });
-                    } else {
-                        resultadosDiv.innerHTML = '<p>No se encontraron resultados.</p>';
-                    }
-
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('resultadosBusqueda').innerHTML = `<p>Error en la búsqueda: ${error.message}</p>`;
-                });
-        });
-    });
-</script>
 @endsection

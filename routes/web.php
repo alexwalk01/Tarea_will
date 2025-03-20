@@ -11,6 +11,7 @@ use App\Http\Controllers\SmsController;
 use App\Http\Controllers\Auth\SecurityController;
 use App\Http\Middleware\CheckTokenExpiration;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
@@ -47,11 +48,12 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     // Rutas de administración protegidas
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+        Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
         Route::resource('juegos', JuegoController::class);
         Route::resource('materias', MateriaController::class);
         Route::resource('proyectos', ProyectoController::class);
     });
-    // Rutas accesibles sin autenticación
+
     Route::get('/cargar-todos-los-juegos', [JuegoController::class, 'cargarTodosLosJuegos']);
     Route::get('/cargar-todas-las-materias', [MateriaController::class, 'cargarTodasLasMaterias']);
     Route::get('/cargar-todos-los-proyectos', [ProyectoController::class, 'cargarTodosLosProyectos']);
@@ -85,3 +87,8 @@ Route::post('/password/update', [App\Http\Controllers\Auth\ResetPasswordControll
 Route::get('/token-expired', function () {
     return view('auth.login');
 })->name('token.expired');
+
+
+Broadcast::channel('user.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});

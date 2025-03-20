@@ -39,6 +39,7 @@ class User extends Authenticatable implements JWTSubject
         'token_expiration',
         'verification_code', // Agregar verification_code
         'verification_expires_at', // Agregar verification_expires_at
+        'session_id',
     ];
 
     protected $hidden = [

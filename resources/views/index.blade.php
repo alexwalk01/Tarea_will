@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        @include('layouts._sidebar') 
+        @include('layouts._sidebar')
 
         <main class="col-12 col-md-9 col-lg-10 content">
             <nav aria-label="breadcrumb">
@@ -28,7 +28,7 @@
                 </div>
             </nav>
             <div class="container">
-                <h2>Bienvenid@, {{ Auth::user()->name }}</h2> 
+                <h2>Bienvenid@, {{ Auth::user()->name }}</h2>
                 <div id="elementos">
                     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
@@ -82,8 +82,8 @@
         document.getElementById('img1').addEventListener('click', cargarJuegos);
         document.getElementById('img2').addEventListener('click', cargarMaterias);
         document.getElementById('img3').addEventListener('click', cargarProyectos);
-        
-        //traer todas los uegos
+
+        //traer todas los juegos
         function cargarJuegos() {
             fetch('/cargar-todos-los-juegos')
                 .then(response => response.json())
@@ -98,59 +98,57 @@
             .then(data => mostrarTarjetas(data))
             .catch(error => console.error('Error cargando materias:', error));
         }
-        
-        //traer todas los proyectos
+
+        //traer todos los proyectos
         function cargarProyectos() {
             fetch('/cargar-todos-los-proyectos')
                 .then(response => response.json())
                 .then(data => mostrarTarjetas(data))
                 .catch(error => console.error('Error cargando proyectos:', error));
-            }
-            
-         
-    //Pintar las tarjetas con lo que trae el carrusel        
-    function mostrarTarjetas(datos) {
-        const elementosDiv = document.getElementById('elementos');
-        elementosDiv.innerHTML = ''; // Vaciar el contenedor
-
-        if (!datos || datos.length === 0) {
-            elementosDiv.innerHTML = `<p class="text-warning">No hay elementos disponibles.</p>`;
-            return;
         }
 
-        const rowDiv = document.createElement('div');
-        rowDiv.classList.add('row');
+        //Pintar las tarjetas con lo que trae el carrusel
+        function mostrarTarjetas(datos) {
+            const elementosDiv = document.getElementById('elementos');
+            elementosDiv.innerHTML = ''; // Vaciar el contenedor
 
-        datos.forEach(item => {
-            const colDiv = document.createElement('div');
-            colDiv.classList.add('col-md-4', 'mb-3');
-
-            let link = "";
-            if (item.modelo === "App\\Models\\Juego") {
-                link = `/juego/${item.id}`;
-            } else if (item.modelo === "App\\Models\\Materia") {
-                link = `/materia/${item.id}`;
-            } else if (item.modelo === "App\\Models\\Proyecto") {
-                link = `/proyecto/${item.id}`;
+            if (!datos || datos.length === 0) {
+                elementosDiv.innerHTML = `<p class="text-warning">No hay elementos disponibles.</p>`;
+                return;
             }
 
-            colDiv.innerHTML = `
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="${link}" class="text-decoration-none">${item.nombre}</a></h5>
-                        <p class="card-text">${item.descripcion}</p>
+            const rowDiv = document.createElement('div');
+            rowDiv.classList.add('row');
+
+            datos.forEach(item => {
+                const colDiv = document.createElement('div');
+                colDiv.classList.add('col-md-4', 'mb-3');
+
+                let link = "";
+                if (item.modelo === "App\\Models\\Juego") {
+                    link = `/juego/${item.id}`;
+                } else if (item.modelo === "App\\Models\\Materia") {
+                    link = `/materia/${item.id}`;
+                } else if (item.modelo === "App\\Models\\Proyecto") {
+                    link = `/proyecto/${item.id}`;
+                }
+
+                colDiv.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="${link}" class="text-decoration-none">${item.nombre}</a></h5>
+                            <p class="card-text">${item.descripcion}</p>
+                        </div>
                     </div>
-                </div>
-            `;
-            rowDiv.appendChild(colDiv);
-        });
+                `;
+                rowDiv.appendChild(colDiv);
+            });
 
-        elementosDiv.appendChild(rowDiv);
-    }
+            elementosDiv.appendChild(rowDiv);
+        }
 
-
-    //Busqueda
-    document.getElementById('busquedaForm').addEventListener('submit', function(e) {
+        // Búsqueda
+        document.getElementById('busquedaForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const nombre = document.getElementById('nombreInput').value;
@@ -204,9 +202,11 @@
                     document.getElementById('resultadosBusqueda').innerHTML = `<p>Error en la búsqueda: ${error.message}</p>`;
                 });
         });
+
+        // Recargar la página cada 30 segundos
+        setInterval(function() {
+            location.reload();
+        }, 30000);
     });
-    
-
-
 </script>
 @endsection
