@@ -12,7 +12,7 @@
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.6",
         "nesbot/carbon": "^3.8",
-        "twilio/sdk": "^8.3",
+        "twilio/sdk": "*",
         "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e756e22d1a46f165dc58c00800056f21",
+    "content-hash": "b33a0376f1bb5bb95acf5a504e160f27",
     "packages": [
         {
             "name": "brick/math",
@@ -5938,9 +5938,9 @@
             ],
             "support": {
                 "issues": "https://github.com/twilio/twilio-php/issues",
-                "source": "https://github.com/twilio/twilio-php/tree/8.3.15"
+                "source": "https://github.com/twilio/twilio-php/tree/8.4.0"
             },
-            "time": "2025-02-20T14:18:17+00:00"
+            "time": "2025-03-13T11:08:57+00:00"
         },
         {
             "name": "tymon/jwt-auth",
