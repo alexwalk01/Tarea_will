@@ -9,13 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ProyectoController extends Controller
 {
-
-//todos los proyectos
-public function cargarTodosLosProyectos()
-{
-    $proyectos = Auth::user()->proyectos()->get();
-    return response()->json($proyectos);
-}
+    public function cargarTodosLosProyectos()
+    {
+        $proyectos = Auth::user()->proyectos()->get();
+        return response()->json($proyectos);
+    }
 
     public function index()
     {
@@ -38,39 +36,39 @@ public function cargarTodosLosProyectos()
 
     public function show($id)
     {
-        $proyecto = Proyecto::findOrFail($id); // Obtiene el proyecto por ID
-        return view('proyecto.descripcion', compact('proyecto')); // Pasar los datos a la vista
+        $proyecto = Proyecto::findOrFail($id);
+        return view('proyecto.descripcion', compact('proyecto'));
     }
-
-
 
     public function create()
     {
-        $usuarios = User::all();  // Obtener todos los usuarios
-        return view('proyecto.create', compact('usuarios'));  // Pasar los usuarios a la vista
+        $usuarios = User::all();
+        return view('proyecto.create', compact('usuarios'));
     }
 
-
     public function store(Request $request)
-{
-    $request->validate([
-        'nombre' => 'required|string|max:255',
-        'descripcion' => 'nullable|string',
-        'user_id' => 'required|exists:users,id',  // Validar que el usuario existe
-    ]);
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'user_id' => 'required|exists:users,id',
+        ]);
 
-    // Crear el proyecto y asignarlo al usuario
-    Proyecto::create([
-        'nombre' => $request->nombre,
-        'descripcion' => $request->descripcion,
-        'user_id' => $request->user_id,  // Asignar el usuario seleccionado
-    ]);
+        Proyecto::create([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'user_id' => $request->user_id,
+        ]);
 
-    return redirect()->route('proyectos.index')->with('success', 'Proyecto creado correctamente.');
-}
+        return redirect()->route('proyectos.index')->with('success', 'Proyecto creado correctamente.');
+    }
 
+    public function edit($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        return view('proyecto.edit', compact('proyecto'));
+    }
 
-    // Actualizar el proyecto
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -78,7 +76,7 @@ public function cargarTodosLosProyectos()
             'descripcion' => 'nullable|string',
         ]);
 
-        $proyecto = Proyecto::findOrFail($id); // Encuentra el proyecto por ID
+        $proyecto = Proyecto::findOrFail($id);
         $proyecto->update([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
@@ -87,12 +85,18 @@ public function cargarTodosLosProyectos()
         return redirect()->route('proyectos.index')->with('success', 'Proyecto actualizado correctamente.');
     }
 
+    public function destroy($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        $proyecto->delete();
+
+        return redirect()->route('proyectos.index')->with('success', 'Proyecto eliminado correctamente.');
+    }
+
     public function buscar(Request $request)
     {
         $nombre = $request->input('nombre');
-
         $proyectos = Proyecto::where('nombre', 'like', '%' . $nombre . '%')->get();
-
         return view('proyecto.index', compact('proyectos'));
     }
 }

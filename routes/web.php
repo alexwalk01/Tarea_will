@@ -48,11 +48,12 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     // Rutas de administración protegidas
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+        Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
         Route::resource('juegos', JuegoController::class);
         Route::resource('materias', MateriaController::class);
         Route::resource('proyectos', ProyectoController::class);
     });
-    // Rutas accesibles sin autenticación
+
     Route::get('/cargar-todos-los-juegos', [JuegoController::class, 'cargarTodosLosJuegos']);
     Route::get('/cargar-todas-las-materias', [MateriaController::class, 'cargarTodasLasMaterias']);
     Route::get('/cargar-todos-los-proyectos', [ProyectoController::class, 'cargarTodosLosProyectos']);

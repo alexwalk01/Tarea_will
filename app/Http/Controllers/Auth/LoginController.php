@@ -67,18 +67,27 @@ class LoginController extends Controller
     {
         $currentSessionId = session()->getId();
 
+        // Verificar si el usuario tiene una sesión activa en otro dispositivo
         if ($user->session_id && $user->session_id !== $currentSessionId) {
             event(new SessionTerminated($user->id));
             DB::table('sessions')->where('id', $user->session_id)->delete();
         }
 
+        // Actualizar la sesión del usuario
         $user->session_id = $currentSessionId;
         $user->save();
-    }
 
+        // Redirigir al panel de administración si el usuario es admin
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.index');
+        }
+
+        // Redirigir a la página principal por defecto
+        return redirect()->intended($this->redirectPath());
+    }
     public function logout(Request $request)
     {
-        if($request->has('duplicate_session')){
+        if ($request->has('duplicate_session')) {
             $user = Auth::user();
             event(new SessionTerminated($user->id));
             Auth::logout();
@@ -131,28 +140,15 @@ class LoginController extends Controller
 
             Auth::login($user);
 
+            // Redirigir al panel de administración si el usuario es admin
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.index');
+            }
+
+            // Redirigir a la página principal por defecto
             return redirect()->route('home');
         } catch (JWTException $e) {
             return response()->json(['error' => 'No se pudo crear el token'], 500);
         }
     }
-
-    // public function authenticated(Request $request, $user)
-    // {
-    //     $currentSessionId = session()->getId();
-
-    //     // Si el usuario ya tiene una sesión activa en otro dispositivo
-    //     if ($user->session_id && $user->session_id !== $currentSessionId) {
-    //         // Notificar al dispositivo antiguo (puedes crear un evento para esto si lo deseas)
-    //         // Cerrar la sesión en el dispositivo antiguo
-    //         \DB::table('sessions')->where('id', $user->session_id)->delete();
-
-    //         // Aquí guardamos el mensaje para que se muestre en el siguiente request
-    //         session()->flash('message', 'Tu sesión ha sido cerrada porque se inició sesión en otro dispositivo.');
-    //     }
-
-    //     // Actualizar el session_id del usuario
-    //     $user->session_id = $currentSessionId;
-    //     $user->save();
-    // }
 }

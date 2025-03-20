@@ -10,23 +10,21 @@ use Illuminate\Support\Facades\Auth;
 class JuegoController extends Controller
 {
     public function cargarMasJuegos(Request $request)
-{
-    $offset = $request->input('offset', 0);
-    $limit = 3;
+    {
+        $offset = $request->input('offset', 0);
+        $limit = 3;
 
-    $juegos = Auth::user()->juegos()->skip($offset)->take($limit)->get();
+        $juegos = Auth::user()->juegos()->skip($offset)->take($limit)->get();
 
-    return response()->json($juegos);
-}
+        return response()->json($juegos);
+    }
 
-
-//todos los juegos
-public function cargarTodosLosJuegos()
-{
-    $juegos = Auth::user()->juegos()->get();
-    return response()->json($juegos);
-}
-
+    // Todos los juegos
+    public function cargarTodosLosJuegos()
+    {
+        $juegos = Auth::user()->juegos()->get();
+        return response()->json($juegos);
+    }
 
     public function index()
     {
@@ -47,13 +45,12 @@ public function cargarTodosLosJuegos()
         return view('juego.descripcion', compact('juego', 'juegos', 'materias', 'proyectos'));
     }
 
-
-        // Este es el método que se usa para mostrar la descripción del juego
-        public function show($id)
-        {
-            $juego = Juego::findOrFail($id); // Obtiene la materia por ID
-            return view('juego.descripcion', compact('juego')); // Pasar los datos a la vista
-        }
+    // Este es el método que se usa para mostrar la descripción del juego
+    public function show($id)
+    {
+        $juego = Juego::findOrFail($id); // Obtiene la materia por ID
+        return view('juego.descripcion', compact('juego')); // Pasar los datos a la vista
+    }
 
     public function create()
     {
@@ -77,9 +74,9 @@ public function cargarTodosLosJuegos()
             'user_id' => $request->usuario_id, // Aquí se asigna el usuario
         ]);
 
-        return redirect()->route('admin.index')->with('success', 'Juego creado con éxito');
+        // Redirigir a la lista de juegos
+        return redirect()->route('juegos.index')->with('success', 'Juego creado con éxito');
     }
-
 
     public function edit($id)
     {
@@ -99,7 +96,7 @@ public function cargarTodosLosJuegos()
         $juego = Juego::findOrFail($id);
         $juego->update($request->all()); // Actualizar el juego
 
-        return redirect()->route('admin.index')->with('success', 'Juego actualizado correctamente.');
+        return redirect()->route('juegos.index')->with('success', 'Juego actualizado correctamente.');
     }
 
     public function buscar(Request $request)

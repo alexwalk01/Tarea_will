@@ -10,22 +10,20 @@ use Illuminate\Support\Facades\Auth;
 class MateriaController extends Controller
 {
     public function cargarMasMaterias(Request $request)
-{
-    $offset = $request->input('offset', 0);
-    $limit = 3;
+    {
+        $offset = $request->input('offset', 0);
+        $limit = 3;
 
-    $materias = Auth::user()->materias()->skip($offset)->take($limit)->get();
+        $materias = Auth::user()->materias()->skip($offset)->take($limit)->get();
+        return response()->json($materias);
+    }
 
-    return response()->json($materias);
-}
-
-
-//todas las materias
-public function cargarTodasLasMaterias()
-{
-    $materias = Auth::user()->materias()->get();
-    return response()->json($materias);
-}
+    // Todas las materias
+    public function cargarTodasLasMaterias()
+    {
+        $materias = Auth::user()->materias()->get();
+        return response()->json($materias);
+    }
 
     public function index()
     {
@@ -45,47 +43,42 @@ public function cargarTodasLasMaterias()
 
         return view('materia.descripcion', compact('materia', 'juegos', 'materias', 'proyectos'));
     }
-    // Este es el método que se usa para mostrar la descripción de la materia
+
     public function show($id)
     {
-        $materia = Materia::findOrFail($id); // Obtiene la materia por ID
-        return view('materia.descripcion', compact('materia')); // Pasar los datos a la vista
+        $materia = Materia::findOrFail($id);
+        return view('materia.descripcion', compact('materia'));
     }
 
     public function create()
     {
-        // Obtener todos los usuarios
-        $usuarios = User::all();  // Asegúrate de que el modelo User esté correctamente importado
+        $usuarios = User::all();
         return view('materia.create', compact('usuarios'));
     }
 
-    // Guardar una nueva materia
     public function store(Request $request)
     {
         $request->validate([
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
-            'user_id' => 'required|exists:users,id', // Validar que el usuario exista
+            'user_id' => 'required|exists:users,id',
         ]);
 
-        // Crear la materia asignada al usuario
         Materia::create([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
-            'user_id' => $request->user_id,  // Asignar el usuario
+            'user_id' => $request->user_id,
         ]);
 
-        return redirect()->route('admin.index')->with('success', 'Materia creada correctamente.');
+        return redirect()->route('materias.index')->with('success', 'Materia creada correctamente.');
     }
 
-    // Mostrar el formulario de edición
     public function edit($id)
     {
-        $materia = Materia::findOrFail($id); // Encuentra la materia por ID
-        return view('materia.edit', compact('materia')); // Pasa la materia a la vista
+        $materia = Materia::findOrFail($id);
+        return view('materia.edit', compact('materia'));
     }
 
-    // Actualizar la materia
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -93,7 +86,7 @@ public function cargarTodasLasMaterias()
             'descripcion' => 'nullable|string',
         ]);
 
-        $materia = Materia::findOrFail($id); // Encuentra la materia por ID
+        $materia = Materia::findOrFail($id);
         $materia->update([
             'nombre' => $request->nombre,
             'descripcion' => $request->descripcion,
@@ -102,12 +95,18 @@ public function cargarTodasLasMaterias()
         return redirect()->route('materias.index')->with('success', 'Materia actualizada correctamente.');
     }
 
+    public function destroy($id)
+    {
+        $materia = Materia::findOrFail($id);
+        $materia->delete();
+
+        return redirect()->route('materias.index')->with('success', 'Materia eliminada correctamente.');
+    }
+
     public function buscar(Request $request)
     {
         $nombre = $request->input('nombre');
-
         $materias = Materia::where('nombre', 'like', '%' . $nombre . '%')->get();
-
         return view('materia.index', compact('materias'));
     }
 }
