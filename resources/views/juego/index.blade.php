@@ -20,8 +20,13 @@
                     <div class="col-md-4 mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">{{ $juego->nombre }}</h5>
-                                <p class="card-text">{{ $juego->descripcion ?? 'Sin descripción' }}</p>
+                                <h5 class="card-title">
+                                    @if(in_array('read', json_decode(auth()->user()->juegos_permissions, true) ?? []))
+                                        <a href="{{ route('juego.descripcion', $juego->id) }}" class="text-decoration-none">{{ $juego->nombre }}</a>
+                                    @else
+                                        {{ $juego->nombre }}
+                                    @endif
+                                </h5>
 
                                 <!-- Botones de Editar y Eliminar -->
                                 @if(in_array('update', json_decode(auth()->user()->juegos_permissions, true) ?? []))

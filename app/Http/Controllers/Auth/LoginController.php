@@ -135,7 +135,7 @@ class LoginController extends Controller
             }
 
             $user->remember_token = Hash::make($token);
-            $user->token_expiration = Carbon::now()->addMinutes(3);
+            $user->token_expiration = Carbon::now()->addMinutes(15);
             $user->save();
 
             Auth::login($user);

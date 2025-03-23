@@ -47,7 +47,7 @@
     <div class="container">
         <h1>403</h1>
         <p>¡Acceso Denegado! No tienes permiso para acceder a esta sección.</p>
-        <a href="{{ url('/login') }}" class="button">Ir al Login</a>
+        <a href="{{ url('/menu') }}" class="button">Ir al Menu</a>
     </div>
 </body>
 </html>

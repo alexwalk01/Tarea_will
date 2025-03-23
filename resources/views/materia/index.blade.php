@@ -24,7 +24,11 @@
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <a href="{{ route('materia.descripcion', $materia->id) }}" class="text-decoration-none">{{ $materia->nombre }}</a>
+                                    @if(in_array('read', json_decode(auth()->user()->materias_permissions, true) ?? []))
+                                        <a href="{{ route('materia.descripcion', $materia->id) }}" class="text-decoration-none">{{ $materia->nombre }}</a>
+                                    @else
+                                        {{ $materia->nombre }}
+                                    @endif
                                 </h5>
                                 <p class="card-text">{{ $materia->descripcion ?? 'Sin descripción' }}</p>
 
