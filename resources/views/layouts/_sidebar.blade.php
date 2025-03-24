@@ -7,57 +7,59 @@
     </button>
     <div class="collapse d-md-block" id="sidebarMenu">
         <ul class="nav flex-column">
+            @if(!empty(json_decode(auth()->user()->juegos_permissions, true)))
+                <li class="nav-item">
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseJuegos" role="button">
+                        <span><i class="bi bi-controller"></i> Juegos</span>
+                        <i class="bi bi-chevron-down float-end toggle-icon" id="iconJuegos"></i>
+                    </a>
+                    <div class="collapse" id="collapseJuegos">
+                        <ul class="nav flex-column ms-3">
+                            @foreach ($juegos as $juego)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('juego.descripcion', ['id' => $juego->id]) }}">{{ $juego->nombre }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+            @endif
 
-            <!-- Juegos -->
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseJuegos" role="button">
-                    <span><i class="bi bi-controller"></i> Juegos</span>
-                    <i class="bi bi-chevron-down float-end toggle-icon" id="iconJuegos"></i>
-                </a>
-                <div class="collapse" id="collapseJuegos">
-                    <ul class="nav flex-column ms-3">
-                        @foreach ($juegos as $juego)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('juego.descripcion', ['id' => $juego->id]) }}">{{ $juego->nombre }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </li>
+            @if(!empty(json_decode(auth()->user()->materias_permissions, true)))
+                <li class="nav-item">
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseMaterias" role="button">
+                        <span><i class="bi bi-book"></i> Materias</span>
+                        <i class="bi bi-chevron-down float-end toggle-icon" id="iconMaterias"></i>
+                    </a>
+                    <div class="collapse" id="collapseMaterias">
+                        <ul class="nav flex-column ms-3">
+                            @foreach ($materias as $materia)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('materia.descripcion', ['id' => $materia->id]) }}">{{ $materia->nombre }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+            @endif
 
-            <!-- Materias -->
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseMaterias" role="button">
-                    <span><i class="bi bi-book"></i> Materias</span>
-                    <i class="bi bi-chevron-down float-end toggle-icon" id="iconMaterias"></i>
-                </a>
-                <div class="collapse" id="collapseMaterias">
-                    <ul class="nav flex-column ms-3">
-                        @foreach ($materias as $materia)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('materia.descripcion', ['id' => $materia->id]) }}">{{ $materia->nombre }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </li>
-
-            <!-- Proyectos -->
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProyectos" role="button">
-                    <span><i class="bi bi-briefcase"></i> Proyectos</span>
-                    <i class="bi bi-chevron-down float-end toggle-icon" id="iconProyectos"></i>
-                </a>
-                <div class="collapse" id="collapseProyectos">
-                    <ul class="nav flex-column ms-3">
-                        @foreach ($proyectos as $proyecto)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('proyecto.descripcion', ['id' => $proyecto->id]) }}">{{ $proyecto->nombre }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </li>
+            @if(!empty(json_decode(auth()->user()->proyectos_permissions, true)))
+                <li class="nav-item">
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProyectos" role="button">
+                        <span><i class="bi bi-briefcase"></i> Proyectos</span>
+                        <i class="bi bi-chevron-down float-end toggle-icon" id="iconProyectos"></i>
+                    </a>
+                    <div class="collapse" id="collapseProyectos">
+                        <ul class="nav flex-column ms-3">
+                            @foreach ($proyectos as $proyecto)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('proyecto.descripcion', ['id' => $proyecto->id]) }}">{{ $proyecto->nombre }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+            @endif
         </ul>
     </div>
 </nav>

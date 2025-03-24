@@ -4,21 +4,25 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckPermissions
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  string  $permission
+     * @return mixed
      */
-    public function handle($request, Closure $next, $permission)
+    public function handle(Request $request, Closure $next, $permission)
     {
-        $user = auth()->user();
+        // Verificar si el usuario tiene el permiso necesario
+        $user = $request->user();
+        $permissions = json_decode($user->{$permission}, true);
 
-        if (!$user || !in_array($permission, $user->juegos_permissions ?? [])) {
-            abort(403, 'No tienes permiso para realizar esta acción.');
+        if (empty($permissions)) {
+            abort(403, 'No tienes permiso para acceder a este módulo.');
         }
 
         return $next($request);

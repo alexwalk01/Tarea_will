@@ -26,7 +26,6 @@ class AdminController extends Controller
     {
         $user = User::findOrFail($userId);
 
-        // Convertir los permisos a JSON antes de guardarlos
         $user->juegos_permissions = json_encode($request->input('juegos_permissions', []));
         $user->materias_permissions = json_encode($request->input('materias_permissions', []));
         $user->proyectos_permissions = json_encode($request->input('proyectos_permissions', []));
