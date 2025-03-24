@@ -38,15 +38,13 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     Route::get('/menu/{name}/{section}', [MenuController::class, 'section'])->name('menu.section');
     Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
-     // Rutas de materias (protegidas por permisos)
-     Route::middleware(CheckPermissions::class . ':materias_permissions')->group(function () {
+    Route::middleware(CheckPermissions::class . ':materias_permissions')->group(function () {
         Route::get('/materias', [MateriaController::class, 'index'])->name('materias.index');
         Route::get('/materia/{id}', [MateriaController::class, 'show'])->name('materia.show');
         Route::get('/materia/{id}/descripcion', [MateriaController::class, 'descripcion'])->name('materia.descripcion');
         Route::resource('materias', MateriaController::class);
     });
 
-    // Rutas de juegos (protegidas por permisos)
     Route::middleware(CheckPermissions::class . ':juegos_permissions')->group(function () {
         Route::get('/juegos', [JuegoController::class, 'index'])->name('juegos.index');
         Route::get('/juego/{id}', [JuegoController::class, 'show'])->name('juego.show');
@@ -54,13 +52,13 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
         Route::resource('juegos', JuegoController::class);
     });
 
-    // Rutas de proyectos (protegidas por permisos)
     Route::middleware(CheckPermissions::class . ':proyectos_permissions')->group(function () {
         Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
         Route::get('/proyecto/{id}', [ProyectoController::class, 'show'])->name('proyecto.show');
         Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
         Route::resource('proyectos', ProyectoController::class);
     });
+
     // Rutas de búsqueda
     Route::get('/buscar', [BusquedaController::class, 'buscar'])->name('buscar.general');
 
@@ -75,9 +73,6 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
         Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
-        Route::resource('juegos', JuegoController::class)->except(['index', 'show']);
-        Route::resource('materias', MateriaController::class)->except(['index', 'show']);
-        Route::resource('proyectos', ProyectoController::class)->except(['index', 'show']);
     });
 });
 
