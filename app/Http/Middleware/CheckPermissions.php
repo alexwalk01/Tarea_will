@@ -12,28 +12,19 @@ class CheckPermissions
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string  $module
      * @param  string  $permission
      * @return mixed
      */
-    public function handle(Request $request, Closure $next, $module, $permission)
+    public function handle(Request $request, Closure $next, $permission)
     {
-        $user = auth()->user();
+        // Verificar si el usuario tiene el permiso necesario
+        $user = $request->user();
+        $permissions = json_decode($user->{$permission}, true);
 
-        // Verifica que el usuario esté autenticado
-        if (!$user) {
-            abort(403, 'No estás autenticado.');
-        }
-
-        // Obtiene los permisos del módulo correspondiente
-        $permissions = json_decode($user->{$module . '_permissions'}, true) ?? [];
-
-        // Verifica que el permiso exista
-        if (!in_array($permission, $permissions)) {
-            abort(403, 'No tienes permiso para realizar esta acción.');
+        if (empty($permissions)) {
+            abort(403, 'No tienes permiso para acceder a este módulo.');
         }
 
         return $next($request);
     }
 }
-
