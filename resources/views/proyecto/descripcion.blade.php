@@ -9,7 +9,7 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('menu.index') }}">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('proyecto.index') }}">Proyectos</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('proyectos.index') }}">Proyectos</a></li>
                     <li class="breadcrumb-item active">{{ $proyecto->nombre }}</li>
                 </ol>
             </nav>
