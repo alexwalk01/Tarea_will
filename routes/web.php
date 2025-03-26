@@ -34,7 +34,7 @@ Route::post('/login', [LoginController::class, 'login']);
 // Rutas protegidas por autenticación
 Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     // Rutas del menú principal
-    Route::get('/home', [MenuController::class, 'index'])->name('home');
+    //Route::get('/home', [MenuController::class, 'index'])->name('home');
     Route::get('/menu/{name}/{section}', [MenuController::class, 'section'])->name('menu.section');
     Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
