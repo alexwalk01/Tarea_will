@@ -54,10 +54,10 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     });
 
     Route::middleware(CheckPermissions::class . ':proyectos_permissions')->group(function () {
-        Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
+        Route::get('/proyectos', [ProyectoController::class, 'index'])->name('user.proyectos.index');
         Route::get('/proyecto/{id}', [ProyectoController::class, 'show'])->name('proyecto.show');
         Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
-        Route::resource('proyectos', ProyectoController::class);
+        Route::resource('proyectos', ProyectoController::class, ['as' => 'admin']);
     });
 
     // Rutas de búsqueda
