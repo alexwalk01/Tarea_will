@@ -29,6 +29,23 @@
             </nav>
             <div class="container">
                 <h2>Bienvenid@, {{ Auth::user()->name }}</h2>
+
+                <!-- Formulario para habilitar/deshabilitar autenticación multifactor -->
+                            <form action="{{ route('auth.toggleMFA') }}" method="POST">
+                @csrf
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="mfaCheckbox" name="mfa_enabled"
+                        {{ Auth::user()->mfa_enabled ? 'checked' : '' }}>
+                    <label class="form-check-label" for="mfaCheckbox">Habilitar autenticación multifactor</label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Actualizar</button>
+            </form>
+
+            @if(session('status'))
+                <p class="text-success">{{ session('status') }}</p>
+            @endif
+
+
                 <div id="elementos">
                     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">

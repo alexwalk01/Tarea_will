@@ -10,21 +10,52 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function login(Request $request)
-    {
-        // Validar la entrada
-        $credentials = $request->only('email', 'password');
+{
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        // Intentar hacer login con las credenciales proporcionadas
-        if (Auth::attempt($credentials)) {
-            // El usuario está autenticado, genera el token JWT
-            $user = Auth::user();
-            $token = JWTAuth::fromUser($user);
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
 
-            // Retorna el token y los datos del usuario
-            return response()->json(compact('token'));
+        // Si MFA está deshabilitado, entrar directo sin verificar correo
+        if (!$user->mfa_enabled) {
+            return redirect()->route('menu.index');
         }
 
-        // Si no se puede autenticar, retorna error
-        return response()->json(['error' => 'Unauthorized'], 401);
+        // Si MFA está habilitado, enviar verificación
+        Auth::logout();
+        session(['mfa_pending' => $user->id]);
+
+        // Asegúrate de que el correo solo se envíe si MFA está habilitado
+        if ($user->mfa_enabled) {
+            $user->sendEmailVerificationNotification(); // Solo cuando MFA está habilitado
+        }
+
+        return view('auth.verification_notice'); // Mostrar la vista solo cuando MFA está habilitado
     }
+
+    return back()->withErrors(['email' => 'Credenciales incorrectas.']);
+}
+
+
+
+
+public function toggleMFA(Request $request)
+{
+    $user = Auth::user();
+    
+    // Asegurar que el valor sea 1 o 0 y actualizar
+    $user->mfa_enabled = $request->has('mfa_enabled') ? 1 : 0;
+    $user->save();
+
+    // Si desactiva MFA, eliminar la sesión pendiente
+    if ($user->mfa_enabled == 0) {
+        session()->forget('mfa_pending');
+    }
+
+    return redirect()->back()->with('status', 'Configuración actualizada correctamente.');
+}
+
 }

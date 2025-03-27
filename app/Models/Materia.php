@@ -9,7 +9,7 @@ class Materia extends Model {
     use HasFactory;
 
     protected $fillable = ['nombre', 'descripcion', 'user_id'];
-
+    protected $table = 'materias';
     public function user() {
         return $this->belongsTo(User::class);
     }

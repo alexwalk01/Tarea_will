@@ -14,7 +14,7 @@ use App\Http\Middleware\CheckTokenExpiration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
 // Rutas de autenticación
 Auth::routes();
 
@@ -30,6 +30,7 @@ Route::get('/login', function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/auth/toggle-mfa', [AuthController::class, 'toggleMFA'])->name('auth.toggleMFA');
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
@@ -73,6 +74,37 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
         Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
+        Route::get('/admin/register', [AdminController::class, 'showAdminRegisterForm'])->name('admin.register');
+        Route::post('/admin/register', [AdminController::class, 'registerAdmin']);
+        Route::resource('proyectos', ProyectoController::class);
+        Route::resource('juegos', JuegoController::class);
+        Route::resource('materias', MateriaController::class);
+        Route::delete('/admin/users/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+        // Juegos
+        Route::get('/juegos/create', [AdminController::class, 'createJuego'])->name('juegos.create');
+        Route::post('/juegos', [AdminController::class, 'storeJuego'])->name('juegos.store');
+        Route::get('/juegos/{id}', [AdminController::class, 'showJuego'])->name('juegos.show');
+        Route::get('/juegos/{id}/edit', [AdminController::class, 'editJuego'])->name('juegos.edit');
+        Route::put('/juegos/{id}', [AdminController::class, 'updateJuego'])->name('juegos.update');
+        Route::delete('/juegos/{id}', [AdminController::class, 'destroyJuego'])->name('juegos.destroy');
+        Route::delete('/juegos/{id}', [AdminController::class, 'destroyJuego'])->name('juegos.destroy');
+        Route::put('/juegos/{id}', [AdminController::class, 'updateJuego'])->name('juegos.update');
+
+        // Materias
+        Route::get('/materias/create', [AdminController::class, 'createMateria'])->name('materias.create');
+        Route::post('/materias', [AdminController::class, 'storeMateria'])->name('materias.store');
+        Route::get('/materias/{id}', [AdminController::class, 'showMateria'])->name('materias.show');
+        Route::get('/materias/{id}/edit', [AdminController::class, 'editMateria'])->name('materias.edit');
+        Route::put('/materias/{id}', [AdminController::class, 'updateMateria'])->name('materias.update');
+        Route::delete('/materias/{id}', [AdminController::class, 'destroyMateria'])->name('materias.destroy');
+
+        // Proyectos
+        Route::get('/proyectos/create', [AdminController::class, 'createProyecto'])->name('proyectos.create');
+        Route::post('/proyectos', [AdminController::class, 'storeProyecto'])->name('proyectos.store');
+        Route::get('/proyectos/{id}', [AdminController::class, 'showProyecto'])->name('proyectos.show');
+        Route::get('/proyectos/{id}/edit', [AdminController::class, 'editProyecto'])->name('proyectos.edit');
+        Route::put('/proyectos/{id}', [AdminController::class, 'updateProyecto'])->name('proyectos.update');
+        Route::delete('/proyectos/{id}', [AdminController::class, 'destroyProyecto'])->name('proyectos.destroy');
     });
 });
 
