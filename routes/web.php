@@ -21,7 +21,7 @@ Auth::routes();
 // Ruta principal, redirige al login si no está autenticado
 Route::get('/', function () {
     return redirect()->route('login');
-})->name('home');
+})->name('home.landing');
 
 // Ruta de login
 Route::get('/login', function () {
