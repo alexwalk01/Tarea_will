@@ -24,7 +24,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('sms.verify') }}">
+                    <form method="POST" action="{{ route('sms.verify_code') }}">
                         @csrf
 
                         {{-- Mantener el teléfono en la sesión para evitar que se pierda --}}
