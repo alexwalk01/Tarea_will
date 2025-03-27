@@ -93,82 +93,203 @@
                             <button type="submit" class="btn btn-primary">Actualizar Permisos</button>
                         </form>
 
-                        <!-- Botón para eliminar usuario (dispara el modal) -->
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $usuario->id }}">
-                            Eliminar Usuario
-                        </button>
-                    </li>
+                        <!-- Botón para eliminar usuario (solo si no es admin) -->
+                        @if($usuario->role !== 'admin')
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ $usuario->id }}">
+                                Eliminar Usuario
+                            </button>
 
-                    <!-- Modal de confirmación para cada usuario -->
-                    <div class="modal fade" id="deleteModal-{{ $usuario->id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ $usuario->id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteModalLabel-{{ $usuario->id }}">Confirmar Eliminación</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    ¿Estás seguro de que deseas eliminar al usuario <strong>{{ $usuario->name }}</strong>? Esta acción no se puede deshacer.
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <form action="{{ route('admin.deleteUser', $usuario->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
-                                    </form>
+                            <!-- Modal de confirmación (solo si no es admin) -->
+                            <div class="modal fade" id="deleteModal-{{ $usuario->id }}" tabindex="-1" aria-labelledby="deleteModalLabel-{{ $usuario->id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="deleteModalLabel-{{ $usuario->id }}">Confirmar Eliminación</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ¿Estás seguro de que deseas eliminar al usuario <strong>{{ $usuario->name }}</strong>? Esta acción no se puede deshacer.
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                            <form action="{{ route('admin.deleteUser', $usuario->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Confirmar Eliminación</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        @endif
+                    </li>
                 @endforeach
             </ul>
         </div>
     </div>
 
-    <!-- Sección de Juegos -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="card-title">Juegos</h2>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach($juegos as $juego)
-                    <li class="list-group-item">{{ $juego->nombre }}</li>
-                @endforeach
-            </ul>
+   <!-- Sección de Juegos mejorada -->
+   <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title">Juegos</h2>
+        <div>
+            <a href="{{ route('juegos.create') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Nuevo Juego
+            </a>
         </div>
     </div>
-
-    <!-- Sección de Materias -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="card-title">Materias</h2>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach($materias as $materia)
-                    <li class="list-group-item">{{ $materia->nombre }}</li>
-                @endforeach
-            </ul>
-        </div>
-    </div>
-
-    <!-- Sección de Proyectos -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h2 class="card-title">Proyectos</h2>
-        </div>
-        <div class="card-body">
-            <ul class="list-group">
-                @foreach($proyectos as $proyecto)
-                    <li class="list-group-item">{{ $proyecto->nombre }}</li>
-                @endforeach
-            </ul>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($lista_juegos as $juego)
+                    <tr>
+                        <td>{{ $juego->id }}</td>
+                        <td>{{ $juego->nombre }}</td>
+                        <td>{{ Str::limit($juego->descripcion, 50) }}</td>
+                        <td>
+                            <a href="{{ route('juegos.show', $juego->id) }}" class="btn btn-info btn-sm" title="Ver">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('juegos.edit', $juego->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('juegos.destroy', $juego->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este juego?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">No hay juegos registrados</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
+<!-- Sección de Materias mejorada -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title">Materias</h2>
+        <div>
+            <a href="{{ route('materias.create') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Nueva Materia
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($lista_materias as $materia)
+                    <tr>
+                        <td>{{ $materia->id }}</td>
+                        <td>{{ $materia->nombre }}</td>
+                        <td>{{ Str::limit($materia->descripcion, 50) }}</td>
+                        <td>
+                            <a href="{{ route('materias.show', $materia->id) }}" class="btn btn-info btn-sm" title="Ver">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('materias.edit', $materia->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('materias.destroy', $materia->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar esta materia?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">No hay materias registradas</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Proyectos mejorada -->
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h2 class="card-title">Proyectos</h2>
+        <div>
+            <a href="{{ route('proyectos.create') }}" class="btn btn-success btn-sm">
+                <i class="fas fa-plus"></i> Nuevo Proyecto
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($lista_proyectos as $proyecto)
+                    <tr>
+                        <td>{{ $proyecto->id }}</td>
+                        <td>{{ $proyecto->nombre }}</td>
+                        <td>{{ Str::limit($proyecto->descripcion, 50) }}</td>
+                        <td>
+                            <a href="{{ route('proyectos.show', $proyecto->id) }}" class="btn btn-info btn-sm" title="Ver">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ route('proyectos.edit', $proyecto->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('proyectos.destroy', $proyecto->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este proyecto?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center">No hay proyectos registrados</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
