@@ -33,22 +33,24 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+{
+    $credentials = $request->only('email', 'password');
 
-        try {
-            if (!$user = User::where('email', $credentials['email'])->first()) {
-                return response()->json(['error' => 'No autorizado'], 401);
-            }
+    try {
+        if (!$user = User::where('email', $credentials['email'])->first()) {
+            return redirect()->route('login')->with('error', 'Credenciales incorrectas.');
+        }
 
-            if (!Hash::check($credentials['password'], $user->password)) {
-                return response()->json(['error' => 'No autorizado'], 401);
-            }
+        if (!Hash::check($credentials['password'], $user->password)) {
+            return redirect()->route('login')->with('error', 'Credenciales incorrectas.');
+        }
 
-            // Generar código de verificación
+        // Verificar si MFA está habilitado para el usuario
+        if ($user->mfa_enabled) {
+            // Generar un código de verificación para MFA
             $verificationCode = Str::random(60);
             $user->verification_code = $verificationCode;
-            $user->verification_expires_at = Carbon::now()->addMinutes(2);
+            $user->verification_expires_at = Carbon::now()->addMinutes(5); // Expira en 5 minutos
             $user->save();
 
             // Enviar correo electrónico de verificación
@@ -57,11 +59,24 @@ class LoginController extends Controller
                 $message->subject('Confirmación de inicio de sesión');
             });
 
+            // Redirigir al usuario a la página de verificación
             return view('verification_sent');
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error interno del servidor'], 500);
         }
+
+        // Si MFA no está habilitado, proceder con el flujo normal
+        Auth::login($user);
+
+        // Redirigir al panel de administración si el usuario es admin
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.index');
+        }
+
+        // Redirigir a la página principal por defecto
+        return redirect()->route('home');
+    } catch (\Exception $e) {
+        return redirect()->route('login')->with('error', 'Error interno del servidor');
     }
+}
 
     public function authenticated(Request $request, $user)
     {
@@ -108,47 +123,47 @@ class LoginController extends Controller
     }
 
     public function verify(Request $request, $verificationCode)
-    {
-        $user = User::where('verification_code', $verificationCode)->first();
+{
+    $user = User::where('verification_code', $verificationCode)->first();
 
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'El código de verificación es inválido o ha caducado.');
-        }
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'El código de verificación es inválido o ha caducado.');
+    }
 
-        if (Carbon::now()->greaterThan($user->verification_expires_at)) {
-            $user->verification_code = null;
-            $user->verification_expires_at = null;
-            $user->save();
-            return redirect()->route('login')->with('error', 'El código de verificación ha expirado. Intenta de nuevo.');
-        }
-
+    if (Carbon::now()->greaterThan($user->verification_expires_at)) {
         $user->verification_code = null;
         $user->verification_expires_at = null;
         $user->save();
-
-        try {
-            // Verificar y eliminar sesión anterior si existe
-            DB::table('sessions')->where('user_id', $user->id)->delete();
-
-            if (!$token = JWTAuth::fromUser($user)) {
-                return response()->json(['error' => 'No autorizado'], 401);
-            }
-
-            $user->remember_token = Hash::make($token);
-            $user->token_expiration = Carbon::now()->addMinutes(15);
-            $user->save();
-
-            Auth::login($user);
-
-            // Redirigir al panel de administración si el usuario es admin
-            if ($user->role === 'admin') {
-                return redirect()->route('admin.index');
-            }
-
-            // Redirigir a la página principal por defecto
-            return redirect()->route('home');
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'No se pudo crear el token'], 500);
-        }
+        return redirect()->route('login')->with('error', 'El código de verificación ha expirado. Intenta de nuevo.');
     }
+
+    // Eliminar el código de verificación después de la validación
+    $user->verification_code = null;
+    $user->verification_expires_at = null;
+    $user->save();
+
+    try {
+        // Generar el JWT
+        if (!$token = JWTAuth::fromUser($user)) {
+            return response()->json(['error' => 'No autorizado'], 401);
+        }
+
+        $user->remember_token = Hash::make($token);
+        $user->token_expiration = Carbon::now()->addMinutes(15);
+        $user->save();
+
+        Auth::login($user);
+
+        // Redirigir al panel de administración si el usuario es admin
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.index');
+        }
+
+        // Redirigir a la página principal por defecto
+        return redirect()->route('home');
+    } catch (JWTException $e) {
+        return redirect()->route('login')->with('error', 'No se pudo crear el token');
+    }
+}
+
 }
