@@ -73,6 +73,12 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.index');
         Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
+        Route::get('/admin/register', [AdminController::class, 'showAdminRegisterForm'])->name('admin.register');
+        Route::post('/admin/register', [AdminController::class, 'registerAdmin']);
+        Route::resource('proyectos', ProyectoController::class);
+        Route::resource('juegos', JuegoController::class);
+        Route::resource('materias', MateriaController::class);
+        Route::delete('/admin/users/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
     });
 });
 
