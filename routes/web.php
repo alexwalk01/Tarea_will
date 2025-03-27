@@ -14,7 +14,7 @@ use App\Http\Middleware\CheckTokenExpiration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\AuthController;
 // Rutas de autenticación
 Auth::routes();
 
@@ -30,6 +30,7 @@ Route::get('/login', function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/auth/toggle-mfa', [AuthController::class, 'toggleMFA'])->name('auth.toggleMFA');
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
