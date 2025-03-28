@@ -90,7 +90,8 @@ class AdminController extends Controller
     }
     public function createJuego()
     {
-        return view('admin.juegos.create');
+        $usuarios = User::all(); // Obtener usuarios para asignar a un juego
+        return view('admin.juegos.create', compact('usuarios'));
     }
 
     public function storeJuego(Request $request)
@@ -163,121 +164,121 @@ class AdminController extends Controller
         // Redirigir a la lista de materias
         return redirect()->route('admin.index')->with('success', 'Proyecto creada con éxito');
     }
-      // ==================== JUEGOS ====================
-      public function editJuego($id)
-      {
-          $juego = Juego::findOrFail($id);
-          $usuarios = User::all();
-          return view('admin.juegos.edit', compact('juego', 'usuarios'));
-      }
+    // ==================== JUEGOS ====================
+    public function editJuego($id)
+    {
+        $juego = Juego::findOrFail($id);
+        $usuarios = User::all();
+        return view('admin.juegos.edit', compact('juego', 'usuarios'));
+    }
 
-      public function updateJuego(Request $request, $id)
-      {
-          $request->validate([
-              'nombre' => 'required|string|max:255',
-              'descripcion' => 'required|string',
-              'usuario_id' => 'required|exists:users,id',
-          ]);
+    public function updateJuego(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'usuario_id' => 'required|exists:users,id',
+        ]);
 
-          $juego = Juego::findOrFail($id);
-          $juego->update([
-              'nombre' => $request->nombre,
-              'descripcion' => $request->descripcion,
-              'user_id' => $request->usuario_id,
-          ]);
+        $juego = Juego::findOrFail($id);
+        $juego->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'user_id' => $request->usuario_id,
+        ]);
 
-          return redirect()->route('admin.index')->with('success', 'Juego actualizado con éxito');
-      }
+        return redirect()->route('admin.index')->with('success', 'Juego actualizado con éxito');
+    }
 
-      public function destroyJuego($id)
-      {
-          $juego = Juego::findOrFail($id);
-          $juego->delete();
-          return redirect()->route('admin.index')->with('success', 'Juego eliminado con éxito');
-      }
+    public function destroyJuego($id)
+    {
+        $juego = Juego::findOrFail($id);
+        $juego->delete();
+        return redirect()->route('admin.index')->with('success', 'Juego eliminado con éxito');
+    }
 
-      // ==================== MATERIAS ====================
-      public function editMateria($id)
-      {
-          $materia = Materia::findOrFail($id);
-          $usuarios = User::all();
-          return view('admin.materias.edit', compact('materia', 'usuarios'));
-      }
+    // ==================== MATERIAS ====================
+    public function editMateria($id)
+    {
+        $materia = Materia::findOrFail($id);
+        $usuarios = User::all();
+        return view('admin.materias.edit', compact('materia', 'usuarios'));
+    }
 
-      public function updateMateria(Request $request, $id)
-      {
-          $request->validate([
-              'nombre' => 'required|string|max:255',
-              'descripcion' => 'required|string',
-              'usuario_id' => 'required|exists:users,id',
-          ]);
+    public function updateMateria(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'usuario_id' => 'required|exists:users,id',
+        ]);
 
-          $materia = Materia::findOrFail($id);
-          $materia->update([
-              'nombre' => $request->nombre,
-              'descripcion' => $request->descripcion,
-              'user_id' => $request->usuario_id,
-          ]);
+        $materia = Materia::findOrFail($id);
+        $materia->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'user_id' => $request->usuario_id,
+        ]);
 
-          return redirect()->route('admin.index')->with('success', 'Materia actualizada con éxito');
-      }
+        return redirect()->route('admin.index')->with('success', 'Materia actualizada con éxito');
+    }
 
-      public function destroyMateria($id)
-      {
-          $materia = Materia::findOrFail($id);
-          $materia->delete();
-          return redirect()->route('admin.index')->with('success', 'Materia eliminada con éxito');
-      }
+    public function destroyMateria($id)
+    {
+        $materia = Materia::findOrFail($id);
+        $materia->delete();
+        return redirect()->route('admin.index')->with('success', 'Materia eliminada con éxito');
+    }
 
-      // ==================== PROYECTOS ====================
-      public function editProyecto($id)
-      {
-          $proyecto = Proyecto::findOrFail($id);
-          $usuarios = User::all();
-          return view('admin.proyectos.edit', compact('proyecto', 'usuarios'));
-      }
+    // ==================== PROYECTOS ====================
+    public function editProyecto($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        $usuarios = User::all();
+        return view('admin.proyectos.edit', compact('proyecto', 'usuarios'));
+    }
 
-      public function updateProyecto(Request $request, $id)
-      {
-          $request->validate([
-              'nombre' => 'required|string|max:255',
-              'descripcion' => 'required|string',
-              'usuario_id' => 'required|exists:users,id',
-          ]);
+    public function updateProyecto(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'usuario_id' => 'required|exists:users,id',
+        ]);
 
-          $proyecto = Proyecto::findOrFail($id);
-          $proyecto->update([
-              'nombre' => $request->nombre,
-              'descripcion' => $request->descripcion,
-              'user_id' => $request->usuario_id,
-          ]);
+        $proyecto = Proyecto::findOrFail($id);
+        $proyecto->update([
+            'nombre' => $request->nombre,
+            'descripcion' => $request->descripcion,
+            'user_id' => $request->usuario_id,
+        ]);
 
-          return redirect()->view('admin.index')->with('success', 'Proyecto actualizado con éxito');
-      }
+        return redirect()->view('admin.index')->with('success', 'Proyecto actualizado con éxito');
+    }
 
-      public function destroyProyecto($id)
-      {
-          $proyecto = Proyecto::findOrFail($id);
-          $proyecto->delete();
-          return redirect()->route('admin.index')->with('success', 'Proyecto eliminado con éxito');
-      }
+    public function destroyProyecto($id)
+    {
+        $proyecto = Proyecto::findOrFail($id);
+        $proyecto->delete();
+        return redirect()->route('admin.index')->with('success', 'Proyecto eliminado con éxito');
+    }
 
-      // ==================== VISTAS INDIVIDUALES ====================
-      public function showJuego($id)
-      {
-          $juego = Juego::with('user')->findOrFail($id);
-          return view('admin.juegos.show', compact('juego'));
-      }
+    // ==================== VISTAS INDIVIDUALES ====================
+    public function showJuego($id)
+    {
+        $juego = Juego::with('user')->findOrFail($id);
+        return view('admin.juegos.show', compact('juego'));
+    }
 
-      public function showMateria($id)
-      {
-          $materia = Materia::with('user')->findOrFail($id);
-          return view('admin.materias.show', compact('materia'));
-      }
+    public function showMateria($id)
+    {
+        $materia = Materia::with('user')->findOrFail($id);
+        return view('admin.materias.show', compact('materia'));
+    }
 
-      public function showProyecto($id)
-      {
-          $proyecto = Proyecto::with('user')->findOrFail($id);
-          return view('admin.proyectos.show', compact('proyecto'));
-      }
+    public function showProyecto($id)
+    {
+        $proyecto = Proyecto::with('user')->findOrFail($id);
+        return view('admin.proyectos.show', compact('proyecto'));
+    }
 }

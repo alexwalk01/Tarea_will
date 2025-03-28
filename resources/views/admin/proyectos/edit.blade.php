@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <h1>Editar Juego</h1>
+    <h1>Editar Proyecto</h1>
 
-    <form action="{{ route('proyectos.update', $proyecto->id) }}" method="POST">
+    <form action="{{ route('admin.proyectos.update', $proyecto->id) }}" method="POST">
         @csrf
         @method('PUT')
 

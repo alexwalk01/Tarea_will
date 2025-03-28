@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Middleware\AdminMiddleware;
+
 // Rutas de autenticación
 Auth::routes();
 
@@ -29,6 +31,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/auth/toggle-mfa', [AuthController::class, 'toggleMFA'])->name('auth.toggleMFA');
 
@@ -69,43 +72,6 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     Route::get('/cargar-todos-los-proyectos', [ProyectoController::class, 'cargarTodosLosProyectos']);
     Route::get('/cargar-mas-juegos', [JuegoController::class, 'cargarMasJuegos']);
     Route::get('/cargar-mas-materias', [MateriaController::class, 'cargarMasMaterias'])->name('materias.cargarMas');
-
-    // Rutas de administración (solo para usuarios con permisos de administrador)
-    Route::prefix('admin')->group(function () {
-        Route::get('/', [AdminController::class, 'index'])->name('admin.index');
-        Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
-        Route::get('/admin/register', [AdminController::class, 'showAdminRegisterForm'])->name('admin.register');
-        Route::post('/admin/register', [AdminController::class, 'registerAdmin']);
-        Route::resource('proyectos', ProyectoController::class);
-        Route::resource('juegos', JuegoController::class);
-        Route::resource('materias', MateriaController::class);
-        Route::delete('/admin/users/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
-        // Juegos
-        Route::get('/juegos/create', [AdminController::class, 'createJuego'])->name('juegos.create');
-        Route::post('/juegos', [AdminController::class, 'storeJuego'])->name('juegos.store');
-        Route::get('/juegos/{id}', [AdminController::class, 'showJuego'])->name('juegos.show');
-        Route::get('/juegos/{id}/edit', [AdminController::class, 'editJuego'])->name('juegos.edit');
-        Route::put('/juegos/{id}', [AdminController::class, 'updateJuego'])->name('juegos.update');
-        Route::delete('/juegos/{id}', [AdminController::class, 'destroyJuego'])->name('juegos.destroy');
-        Route::delete('/juegos/{id}', [AdminController::class, 'destroyJuego'])->name('juegos.destroy');
-        Route::put('/juegos/{id}', [AdminController::class, 'updateJuego'])->name('juegos.update');
-
-        // Materias
-        Route::get('/materias/create', [AdminController::class, 'createMateria'])->name('materias.create');
-        Route::post('/materias', [AdminController::class, 'storeMateria'])->name('materias.store');
-        Route::get('/materias/{id}', [AdminController::class, 'showMateria'])->name('materias.show');
-        Route::get('/materias/{id}/edit', [AdminController::class, 'editMateria'])->name('materias.edit');
-        Route::put('/materias/{id}', [AdminController::class, 'updateMateria'])->name('materias.update');
-        Route::delete('/materias/{id}', [AdminController::class, 'destroyMateria'])->name('materias.destroy');
-
-        // Proyectos
-        Route::get('/proyectos/create', [AdminController::class, 'createProyecto'])->name('proyectos.create');
-        Route::post('/proyectos', [AdminController::class, 'storeProyecto'])->name('proyectos.store');
-        Route::get('/proyectos/{id}', [AdminController::class, 'showProyecto'])->name('proyectos.show');
-        Route::get('/proyectos/{id}/edit', [AdminController::class, 'editProyecto'])->name('proyectos.edit');
-        Route::put('/proyectos/{id}', [AdminController::class, 'updateProyecto'])->name('proyectos.update');
-        Route::delete('/proyectos/{id}', [AdminController::class, 'destroyProyecto'])->name('proyectos.destroy');
-    });
 });
 
 // Rutas de seguridad (recuperación de contraseña, etc.)
@@ -136,3 +102,35 @@ Route::get('/token-expired', function () {
 Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+Route::prefix('admin')->middleware(['auth', CheckTokenExpiration::class])->group(function () {
+
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+
+    Route::get('/juegos/create', [AdminController::class, 'createJuego'])->name('admin.juegos.create');
+    Route::post('/juegos', [AdminController::class, 'storeJuego'])->name('admin.juegos.store');
+    Route::get('/juegos/{id}/edit', [AdminController::class, 'editJuego'])->name('admin.juegos.edit');
+    Route::put('/juegos/{id}', [AdminController::class, 'updateJuego'])->name('admin.juegos.update');
+    Route::delete('/juegos/{id}', [AdminController::class, 'destroyJuego'])->name('admin.juegos.destroy');
+    Route::get('/juegos/{id}', [AdminController::class, 'showJuego'])->name('admin.juegos.show');
+
+    Route::get('/materias/create', [AdminController::class, 'createMateria'])->name('admin.materias.create');
+    Route::post('/materias', [AdminController::class, 'storeMateria'])->name('admin.materias.store');
+    Route::get('/materias/{id}/edit', [AdminController::class, 'editMateria'])->name('admin.materias.edit');
+    Route::put('/materias/{id}', [AdminController::class, 'updateMateria'])->name('admin.materias.update');
+    Route::delete('/materias/{id}', [AdminController::class, 'destroyMateria'])->name('admin.materias.destroy');
+    Route::get('/materias/{id}', [AdminController::class, 'showMateria'])->name('admin.materias.show');
+
+    Route::get('/proyectos/create', [AdminController::class, 'createProyecto'])->name('admin.proyectos.create');
+    Route::post('/proyectos', [AdminController::class, 'storeProyecto'])->name('admin.proyectos.store');
+    Route::get('/proyectos/{id}/edit', [AdminController::class, 'editProyecto'])->name('admin.proyectos.edit');
+    Route::put('/proyectos/{id}', [AdminController::class, 'updateProyecto'])->name('admin.proyectos.update');
+    Route::delete('/proyectos/{id}', [AdminController::class, 'destroyProyecto'])->name('admin.proyectos.destroy');
+    Route::get('/proyectos/{id}', [AdminController::class, 'showProyecto'])->name('admin.proyectos.show');
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
+    Route::get('/admin/register', [AdminController::class, 'showAdminRegisterForm'])->name('admin.register');
+    Route::post('/admin/register', [AdminController::class, 'registerAdmin']);
+    Route::delete('/admin/users/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
+});
+

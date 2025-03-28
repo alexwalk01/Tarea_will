@@ -133,7 +133,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h2 class="card-title">Juegos</h2>
         <div>
-            <a href="{{ route('juegos.create') }}" class="btn btn-success btn-sm">
+            <a href="{{ route('admin.juegos.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> Nuevo Juego
             </a>
         </div>
@@ -156,13 +156,10 @@
                         <td>{{ $juego->nombre }}</td>
                         <td>{{ Str::limit($juego->descripcion, 50) }}</td>
                         <td>
-                            <a href="{{ route('juegos.show', $juego->id) }}" class="btn btn-info btn-sm" title="Ver">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ route('juegos.edit', $juego->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                            <a href="{{ route('admin.juegos.edit', $juego->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('juegos.destroy', $juego->id) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('admin.juegos.destroy', $juego->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este juego?')">
@@ -187,7 +184,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h2 class="card-title">Materias</h2>
         <div>
-            <a href="{{ route('materias.create') }}" class="btn btn-success btn-sm">
+            <a href="{{ route('admin.materias.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> Nueva Materia
             </a>
         </div>
@@ -210,13 +207,10 @@
                         <td>{{ $materia->nombre }}</td>
                         <td>{{ Str::limit($materia->descripcion, 50) }}</td>
                         <td>
-                            <a href="{{ route('materias.show', $materia->id) }}" class="btn btn-info btn-sm" title="Ver">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ route('materias.edit', $materia->id) }}" class="btn btn-warning btn-sm" title="Editar">
+                            <a href="{{ route('admin.materias.edit', $materia->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('materias.destroy', $materia->id) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('admin.materias.destroy', $materia->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar esta materia?')">
@@ -241,7 +235,7 @@
     <div class="card-header d-flex justify-content-between align-items-center">
         <h2 class="card-title">Proyectos</h2>
         <div>
-            <a href="{{ route('proyectos.create') }}" class="btn btn-success btn-sm">
+            <a href="{{ route('admin.proyectos.create') }}" class="btn btn-success btn-sm">
                 <i class="fas fa-plus"></i> Nuevo Proyecto
             </a>
         </div>
@@ -264,13 +258,11 @@
                         <td>{{ $proyecto->nombre }}</td>
                         <td>{{ Str::limit($proyecto->descripcion, 50) }}</td>
                         <td>
-                            <a href="{{ route('proyectos.show', $proyecto->id) }}" class="btn btn-info btn-sm" title="Ver">
-                                <i class="fas fa-eye"></i>
-                            </a>
-                            <a href="{{ route('proyectos.edit', $proyecto->id) }}" class="btn btn-warning btn-sm" title="Editar">
+
+                            <a href="{{ route('admin.proyectos.edit', $proyecto->id) }}" class="btn btn-warning btn-sm" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('proyectos.destroy', $proyecto->id) }}" method="POST" style="display: inline;">
+                            <form action="{{ route('admin.proyectos.destroy', $proyecto->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este proyecto?')">
@@ -291,5 +283,5 @@
 </div>
 </div>
 <!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> --}}
 @endsection

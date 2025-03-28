@@ -7,17 +7,17 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-book"></i> Crear Nueva Proyecto
+                        <i class="fas fa-project-diagram"></i> Crear Nuevo Proyecto
                     </h5>
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('proyectos.store') }}">
+                    <form method="POST" action="{{ route('admin.proyectos.store') }}">
                         @csrf
 
                         <div class="mb-3 row">
                             <label for="nombre" class="col-md-4 col-form-label text-md-end">
-                                Nombre de la Proyecto
+                                Nombre del Proyecto
                             </label>
                             <div class="col-md-6">
                                 <input id="nombre" type="text"
