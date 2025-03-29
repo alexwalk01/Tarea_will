@@ -7,12 +7,12 @@
             <div class="card">
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">
-                        <i class="fas fa-book"></i> Crear Nueva Materia
+                        <i class="fas fa-project-diagram"></i> Crear Nuevo Materia
                     </h5>
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('materias.store') }}">
+                    <form method="POST" action="{{ route('admin.materias.store') }}">
                         @csrf
 
                         <div class="mb-3 row">

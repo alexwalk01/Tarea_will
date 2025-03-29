@@ -43,22 +43,23 @@
                 </li>
             @endif
 
-            <!-- Proyectos -->
-            <li class="nav-item">
-                <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProyectos" role="button">
-                    <span><i class="bi bi-briefcase"></i> Proyectos</span>
-                    <i class="bi bi-chevron-down float-end toggle-icon" id="iconProyectos"></i>
-                </a>
-                <div class="collapse" id="collapseProyectos">
-                    <ul class="nav flex-column ms-3">
-                        @foreach ($proyectos as $proyecto)
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('proyecto.descripcion', ['id' => $proyecto->id]) }}">{{ $proyecto->nombre }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </li>
+            @if(!empty(json_decode(auth()->user()->proyectos_permissions, true)))
+                <li class="nav-item">
+                    <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProyectos" role="button">
+                        <span><i class="bi bi-briefcase"></i> Proyectos</span>
+                        <i class="bi bi-chevron-down float-end toggle-icon" id="iconProyectos"></i>
+                    </a>
+                    <div class="collapse" id="collapseProyectos">
+                        <ul class="nav flex-column ms-3">
+                            @foreach ($proyectos as $proyecto)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('proyecto.descripcion', ['id' => $proyecto->id]) }}">{{ $proyecto->nombre }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </li>
+            @endif
         </ul>
     </div>
 </nav>
