@@ -102,7 +102,7 @@ Route::get('/token-expired', function () {
 Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
-Route::prefix('admin')->middleware(['auth', CheckTokenExpiration::class])->group(function () {
+Route::prefix('admin')->middleware(['auth',AdminMiddleware::class, CheckTokenExpiration::class])->group(function () {
 
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
