@@ -132,7 +132,7 @@ Route::prefix('admin')->middleware(['auth', CheckTokenExpiration::class])->group
     Route::delete('/proyectos/{id}', [AdminController::class, 'destroyProyecto'])->name('admin.proyectos.destroy');
     Route::get('/proyectos/{id}', [AdminController::class, 'showProyecto'])->name('admin.proyectos.show');
 
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+//    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::post('/update-permissions/{userId}', [AdminController::class, 'updateUserPermissions'])->name('admin.updatePermissions');
     Route::get('/admin/register', [AdminController::class, 'showAdminRegisterForm'])->name('admin.register');
     Route::post('/admin/register', [AdminController::class, 'registerAdmin']);
