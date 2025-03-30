@@ -3,6 +3,7 @@
 <head>
     <title>Confirmación de inicio de sesión</title>
 </head>
+
 <body>
     <p>Hola {{ $user->name }},</p>
     <p>Alguien ha intentado iniciar sesión en tu cuenta ahora mismo. ¿Fuiste tú?</p>
