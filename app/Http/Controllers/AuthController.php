@@ -55,7 +55,7 @@ public function toggleMFA(Request $request)
         session()->forget('mfa_pending');
     }
 
-    return redirect()->back()->with('status', 'Configuración actualizada correctamente.');
+    return redirect()->back()->with('status', 'Configuración actualizada con exito!.');
 }
 
 }
