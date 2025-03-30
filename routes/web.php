@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Controllers\Auth\RegisterController;
 
 // Rutas de autenticación
 Auth::routes();
@@ -34,6 +35,10 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/auth/toggle-mfa', [AuthController::class, 'toggleMFA'])->name('auth.toggleMFA');
+// Rutas para registro y login
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
