@@ -46,21 +46,23 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
         Route::get('/materias', [MateriaController::class, 'index'])->name('materias.index');
         Route::get('/materia/{id}', [MateriaController::class, 'show'])->name('materia.show');
         Route::get('/materia/{id}/descripcion', [MateriaController::class, 'descripcion'])->name('materia.descripcion');
-        Route::resource('materias', MateriaController::class);
+        Route::resource('materias', MateriaController::class)->except(['index', 'show']);
     });
 
+    // Proteger todas las rutas de juegos
     Route::middleware(CheckPermissions::class . ':juegos_permissions')->group(function () {
         Route::get('/juegos', [JuegoController::class, 'index'])->name('juegos.index');
         Route::get('/juego/{id}', [JuegoController::class, 'show'])->name('juego.show');
         Route::get('/juego/{id}/descripcion', [JuegoController::class, 'descripcion'])->name('juego.descripcion');
-        Route::resource('juegos', JuegoController::class);
+        Route::resource('juegos', JuegoController::class)->except(['index', 'show']);
     });
 
+    // Proteger todas las rutas de proyectos
     Route::middleware(CheckPermissions::class . ':proyectos_permissions')->group(function () {
         Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
         Route::get('/proyecto/{id}', [ProyectoController::class, 'show'])->name('proyecto.show');
         Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
-        Route::resource('proyectos', ProyectoController::class);
+        Route::resource('proyectos', ProyectoController::class)->except(['index', 'show']);
     });
 
     // Rutas de búsqueda

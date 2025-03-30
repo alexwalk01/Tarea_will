@@ -27,6 +27,9 @@ class MateriaController extends Controller
 
     public function index()
     {
+        if (!in_array('read', json_decode(auth()->user()->materias_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear materias.');
+        }
         $materias = Auth::user()->materias;
         $juegos = Auth::user()->juegos;
         $proyectos = Auth::user()->proyectos;
@@ -36,6 +39,9 @@ class MateriaController extends Controller
 
     public function descripcion($id)
     {
+        if (!in_array('read', json_decode(auth()->user()->materias_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear materias.');
+        }
         $materia = Materia::findOrFail($id);
         $juegos = Auth::user()->juegos;
         $materias = Auth::user()->materias;
@@ -52,6 +58,9 @@ class MateriaController extends Controller
 
     public function create()
     {
+        if (!in_array('create', json_decode(auth()->user()->materias_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear materias.');
+        }
         $usuarios = User::all();
         return view('materia.create', compact('usuarios'));
     }
@@ -75,6 +84,9 @@ class MateriaController extends Controller
 
     public function edit($id)
     {
+        if (!in_array('update', json_decode(auth()->user()->materias_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear materias.');
+        }
         $materia = Materia::findOrFail($id);
         return view('materia.edit', compact('materia'));
     }

@@ -28,6 +28,9 @@ class JuegoController extends Controller
 
     public function index()
     {
+        if (!in_array('read', json_decode(auth()->user()->juegos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear juegos.');
+        }
         $juegos = Auth::user()->juegos;
         $materias = Auth::user()->materias;
         $proyectos = Auth::user()->proyectos;
@@ -37,6 +40,9 @@ class JuegoController extends Controller
 
     public function descripcion($id)
     {
+        if (!in_array('read', json_decode(auth()->user()->juegos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear juegos.');
+        }
         $juego = Juego::findOrFail($id);
         $juegos = Auth::user()->juegos;
         $materias = Auth::user()->materias;
@@ -54,6 +60,9 @@ class JuegoController extends Controller
 
     public function create()
     {
+        if (!in_array('create', json_decode(auth()->user()->juegos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear juegos.');
+        }
         $usuarios = User::all(); // Obtener todos los usuarios
         return view('juego.create', compact('usuarios')); // Pasar la variable 'usuarios' a la vista
     }
@@ -80,6 +89,9 @@ class JuegoController extends Controller
 
     public function edit($id)
     {
+        if (!in_array('update', json_decode(auth()->user()->juegos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear juegos.');
+        }
         $juego = Juego::findOrFail($id);
         $usuarios = User::all(); // Obtener usuarios para asignar a un juego
         return view('juego.edit', compact('juego', 'usuarios'));

@@ -17,6 +17,9 @@ class ProyectoController extends Controller
 
     public function index()
     {
+        if (!in_array('read', json_decode(auth()->user()->proyectos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear proyectos.');
+        }
         $proyectos = Auth::user()->proyectos;
         $juegos = Auth::user()->juegos;
         $materias = Auth::user()->materias;
@@ -26,6 +29,9 @@ class ProyectoController extends Controller
 
     public function descripcion($id)
     {
+        if (!in_array('read', json_decode(auth()->user()->proyectos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear proyectos.');
+        }
         $proyecto = Proyecto::findOrFail($id);
         $juegos = Auth::user()->juegos;
         $materias = Auth::user()->materias;
@@ -42,6 +48,9 @@ class ProyectoController extends Controller
 
     public function create()
     {
+        if (!in_array('create', json_decode(auth()->user()->proyectos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear proyectos.');
+        }
         $usuarios = User::all();
         return view('proyecto.create', compact('usuarios'));
     }
@@ -65,6 +74,9 @@ class ProyectoController extends Controller
 
     public function edit($id)
     {
+        if (!in_array('update', json_decode(auth()->user()->proyectos_permissions, true) ?? [])) {
+            abort(403, 'No tienes permiso para crear proyectos.');
+        }
         $proyecto = Proyecto::findOrFail($id);
         return view('proyecto.edit', compact('proyecto'));
     }
