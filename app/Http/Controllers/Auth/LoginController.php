@@ -145,7 +145,7 @@ class LoginController extends Controller
     try {
         // Generar el JWT
         if (!$token = JWTAuth::fromUser($user)) {
-            return response()->json(['error' => 'No autorizado'], 401);
+            return redirect()->route('login')->with('error', 'No autorizad');
         }
 
         $user->remember_token = Hash::make($token);

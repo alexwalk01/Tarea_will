@@ -24,7 +24,7 @@ Auth::routes();
 // Ruta principal, redirige al login si no está autenticado
 Route::get('/', function () {
     return redirect()->route('login');
-})->name('home');
+})->name('home.landing');
 
 // Ruta de login
 Route::get('/login', function () {
@@ -48,24 +48,24 @@ Route::middleware(['auth', CheckTokenExpiration::class])->group(function () {
     Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
     Route::middleware(CheckPermissions::class . ':materias_permissions')->group(function () {
-        Route::get('/materias', [MateriaController::class, 'index'])->name('materias.index');
+        Route::get('/materias', [MateriaController::class, 'index'])->name('user.materias.index');
         Route::get('/materia/{id}', [MateriaController::class, 'show'])->name('materia.show');
         Route::get('/materia/{id}/descripcion', [MateriaController::class, 'descripcion'])->name('materia.descripcion');
-        Route::resource('materias', MateriaController::class);
+        Route::resource('materias', MateriaController::class, ['as' => 'admin']);
     });
 
     Route::middleware(CheckPermissions::class . ':juegos_permissions')->group(function () {
-        Route::get('/juegos', [JuegoController::class, 'index'])->name('juegos.index');
+        Route::get('/juegos', [JuegoController::class, 'index'])->name('user.juegos.index');
         Route::get('/juego/{id}', [JuegoController::class, 'show'])->name('juego.show');
         Route::get('/juego/{id}/descripcion', [JuegoController::class, 'descripcion'])->name('juego.descripcion');
-        Route::resource('juegos', JuegoController::class);
+        Route::resource('juegos', JuegoController::class, ['as' => 'admin']);
     });
 
     Route::middleware(CheckPermissions::class . ':proyectos_permissions')->group(function () {
-        Route::get('/proyectos', [ProyectoController::class, 'index'])->name('proyectos.index');
+        Route::get('/proyectos', [ProyectoController::class, 'index'])->name('user.proyectos.index');
         Route::get('/proyecto/{id}', [ProyectoController::class, 'show'])->name('proyecto.show');
         Route::get('/proyecto/{id}/descripcion', [ProyectoController::class, 'descripcion'])->name('proyecto.descripcion');
-        Route::resource('proyectos', ProyectoController::class);
+        Route::resource('proyectos', ProyectoController::class, ['as' => 'admin']);
     });
 
     // Rutas de búsqueda
@@ -107,6 +107,7 @@ Route::get('/token-expired', function () {
 Broadcast::channel('user.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+<<<<<<< HEAD
 Route::prefix('admin')->middleware(['auth', CheckTokenExpiration::class])->group(function () {
 
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
@@ -139,3 +140,6 @@ Route::prefix('admin')->middleware(['auth', CheckTokenExpiration::class])->group
     Route::delete('/admin/users/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 });
 
+=======
+// FIN
+>>>>>>> 83cb361798f6aa3809908322fa5500c72ad7309e
