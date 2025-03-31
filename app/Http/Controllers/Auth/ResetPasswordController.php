@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
@@ -47,11 +48,23 @@ class ResetPasswordController extends Controller
 
         return redirect()->route('login')->with('success', 'Tu contraseña ha sido restablecida correctamente.');
     }
-    
-    // Sobrescribir el método reset() si es necesario
+
     public function reset(Request $request)
     {
-        // Tu implementación personalizada
-        return $this->updatePassword($request);  // Si quieres que utilice la misma lógica que tu método updatePassword
+       // \Log::info('Reset password request received', $request->all());
+
+        $response = $this->broker()->reset(
+            $this->credentials($request),
+            function ($user, $password) {
+              //  \Log::info('Updating password for user: ' . $user->email);
+                $this->resetPassword($user, $password);
+            }
+        );
+
+        //\Log::info('Reset password response: ' . $response);
+
+        return $response == Password::PASSWORD_RESET
+            ? $this->sendResetResponse($request, $response)
+            : $this->sendResetFailedResponse($request, $response);
     }
 }

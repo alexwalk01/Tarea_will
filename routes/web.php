@@ -135,4 +135,19 @@ Route::prefix('admin')->middleware(['auth',AdminMiddleware::class, CheckTokenExp
     Route::post('/admin/register', [AdminController::class, 'registerAdmin']);
     Route::delete('/admin/users/{userId}', [AdminController::class, 'deleteUser'])->name('admin.deleteUser');
 });
+// Elimina Auth::routes() o reemplázala con rutas específicas excepto las de password
+Auth::routes(['reset' => false]); // Desactiva solo las rutas de reset
+
+// Agrega tus rutas personalizadas
+Route::get('/password/reset', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->name('password.request');
+
+Route::post('/password/email', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('password.email');
+
+Route::get('/password/reset/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])
+    ->name('password.reset');
+
+Route::post('/password/reset', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])
+    ->name('password.update');
 
